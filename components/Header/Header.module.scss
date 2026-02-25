@@ -1,0 +1,75 @@
+/**
+ * Header component styles - DRK Corporate Design
+ */
+
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: $z-index-sticky;
+  background-color: $drk-weiss;
+  border-bottom: 1px solid $color-border;
+  box-shadow: $shadow-sm;
+  padding-top: 4px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background-color: $drk-rot;
+  }
+
+  &__inner {
+    @include container;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: $spacing-md;
+    min-height: 4.5rem;
+    padding-top: $spacing-sm;
+    padding-bottom: $spacing-sm;
+  }
+
+  &__brand {
+    flex-shrink: 0;
+    overflow: visible;
+  }
+
+  &__logoLink {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: $drk-schwarz;
+    font-weight: normal;
+
+    &:hover {
+      color: $drk-schwarz;
+    }
+
+    &:focus-visible {
+      @include focus-outline;
+    }
+  }
+
+  &__logo {
+    display: block;
+    height: auto;
+    width: auto;
+    max-height: 56px;
+    max-width: 180px;
+    object-fit: contain;
+  }
+
+  &__siteName {
+    font-family: $font-family-base;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $drk-schwarz;
+  }
+}

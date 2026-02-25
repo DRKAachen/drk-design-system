@@ -1,0 +1,40 @@
+{
+  "name": "@drk/design-system",
+  "version": "1.0.0",
+  "description": "DRK shared design system, components, and utilities for multi-site Next.js projects",
+  "private": false,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./components/Button/Button": "./components/Button/Button.tsx",
+    "./components/*": "./components/*",
+    "./components/*/*": "./components/*/*",
+    "./styles/*": "./styles/*",
+    "./lib/*": "./lib/*",
+    "./middleware": "./middleware.ts"
+  },
+  "files": ["components", "styles", "lib", "index.ts", "middleware.ts"],
+  "repository": {"type": "git", "url": "https://github.com/YOUR_ORG/drk-design-system.git"},
+  "publishConfig": {"registry": "https://npm.pkg.github.com"},
+  "peerDependencies": {
+    "next": ">=14.0.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "dependencies": {
+    "@portabletext/react": "^3.1.0",
+    "@sanity/client": "^6.15.0",
+    "@sanity/image-url": "^1.0.2",
+    "groq": "^2.0.0",
+    "next-sanity": "^12.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "sass": "^1.77.0",
+    "typescript": "^5.6.0"
+  },
+  "engines": {"node": ">=20.0.0"}
+}

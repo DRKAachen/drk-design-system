@@ -1,0 +1,237 @@
+/**
+ * Navigation component styles - DRK Corporate Design
+ */
+
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.navigation {
+  display: flex;
+  align-items: center;
+
+  &__toggle {
+    @include button-reset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: $spacing-sm;
+    z-index: $z-index-fixed + 1;
+
+    @include respond-to(md) {
+      display: none;
+    }
+
+    &:focus-visible {
+      @include focus-outline;
+    }
+  }
+
+  &__toggleIcon {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 24px;
+    height: 18px;
+
+    span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background-color: $drk-schwarz;
+      transition: transform $transition-fast, opacity $transition-fast;
+    }
+  }
+
+  .navigation__toggle[aria-expanded='true'] &__toggleIcon {
+    span:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+
+    span:nth-child(2) {
+      opacity: 0;
+    }
+
+    span:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+  }
+
+  &__backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba($drk-schwarz, 0.5);
+    z-index: $z-index-modal-backdrop;
+
+    @include respond-to(md) {
+      display: none;
+    }
+  }
+
+  &__list {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(300px, 85vw);
+    padding: $spacing-3xl $spacing-lg $spacing-lg;
+    background-color: $drk-weiss;
+    border-left: 3px solid $drk-rot;
+    box-shadow: $shadow-xl;
+    overflow-y: auto;
+    z-index: $z-index-modal;
+    transform: translateX(100%);
+    transition: transform $transition-base;
+    list-style: none;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+
+    &--open {
+      transform: translateX(0);
+    }
+
+    @include respond-to(md) {
+      position: static;
+      width: auto;
+      padding: 0;
+      background-color: transparent;
+      border-left: none;
+      box-shadow: none;
+      overflow: visible;
+      transform: none;
+      flex-direction: row;
+      gap: $spacing-sm;
+    }
+  }
+
+  &__item {
+    position: relative;
+
+    &:hover,
+    &--open {
+      .navigation__submenu {
+        display: block;
+        animation: fadeIn $transition-fast forwards;
+      }
+    }
+
+    &:focus-within {
+      .navigation__submenu {
+        display: block;
+      }
+    }
+  }
+
+  &__link {
+    @include button-reset;
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    padding: $spacing-sm $spacing-md;
+    font-family: $font-family-base;
+    font-weight: $font-weight-bold;
+    font-size: $font-size-base;
+    color: $drk-schwarz;
+    text-decoration: none;
+    transition: color $transition-fast;
+    white-space: nowrap;
+
+    &:hover {
+      color: $drk-rot;
+    }
+
+    &:focus-visible {
+      @include focus-outline;
+    }
+
+    @media (max-width: #{$breakpoint-md - 1px}) {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+
+  &__arrow {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid currentColor;
+    transition: transform $transition-fast;
+
+    .navigation__item--open &,
+    .navigation__item:hover &,
+    .navigation__item:focus-within & {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__submenu {
+    display: none;
+    list-style: none;
+    margin: 0;
+    padding: $spacing-sm 0;
+    background-color: $drk-weiss;
+
+    @media (max-width: #{$breakpoint-md - 1px}) {
+      position: static;
+      padding-left: $spacing-md;
+      border-left: 3px solid $drk-rot;
+      margin-top: $spacing-xs;
+    }
+
+    @include respond-to(md) {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 240px;
+      border: 1px solid $color-border;
+      border-top: 3px solid $drk-rot;
+      box-shadow: $shadow-lg;
+      z-index: $z-index-dropdown;
+    }
+  }
+
+  &__submenu-item {
+    margin: 0;
+  }
+
+  &__submenu-link {
+    display: block;
+    padding: $spacing-sm $spacing-lg;
+    font-family: $font-family-base;
+    font-weight: $font-weight-normal;
+    font-size: $font-size-sm;
+    color: $drk-schwarz;
+    text-decoration: none;
+    transition: background-color $transition-fast, color $transition-fast;
+
+    &:hover {
+      background-color: $drk-hellblau;
+      color: $drk-rot;
+    }
+
+    &:focus-visible {
+      @include focus-outline;
+    }
+
+    &--parent {
+      font-weight: $font-weight-bold;
+      border-bottom: 1px solid $color-border;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-$spacing-xs);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

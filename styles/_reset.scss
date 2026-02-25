@@ -1,0 +1,87 @@
+/**
+ * Minimal CSS reset and base styles.
+ */
+
+@use "sass:color";
+@use 'variables';
+@use 'mixins';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  font-family: variables.$font-family-base;
+  font-size: variables.$font-size-base;
+  line-height: variables.$line-height-normal;
+  color: variables.$color-text-primary;
+  background-color: variables.$color-background;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-family: variables.$font-family-heading;
+  font-weight: variables.$font-weight-bold;
+  line-height: variables.$line-height-tight;
+  color: variables.$drk-rot;
+}
+
+h1 { font-size: variables.$font-size-4xl; }
+h2 { font-size: variables.$font-size-3xl; }
+h3 { font-size: variables.$font-size-2xl; }
+h4 { font-size: variables.$font-size-xl; }
+h5 { font-size: variables.$font-size-lg; }
+h6 { font-size: variables.$font-size-base; }
+
+p {
+  margin: 0 0 variables.$spacing-md;
+}
+
+a {
+  color: variables.$drk-dunkelblau;
+  text-decoration: none;
+  font-weight: variables.$font-weight-bold;
+  transition: color variables.$transition-fast;
+
+  &:hover {
+    color: color.adjust(variables.$drk-dunkelblau, $lightness: -10%);
+  }
+
+  &:focus-visible {
+    @include mixins.focus-outline;
+  }
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+ul, ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  cursor: pointer;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}

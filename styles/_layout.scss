@@ -1,0 +1,38 @@
+/**
+ * Layout utility styles - structural classes for page layout.
+ */
+
+@use 'variables';
+@use 'mixins';
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main {
+  flex: 1 0 auto;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: variables.$spacing-md;
+  z-index: variables.$z-index-tooltip + 1;
+  padding: variables.$spacing-sm variables.$spacing-md;
+  background-color: variables.$drk-rot;
+  color: variables.$drk-weiss;
+  font-family: variables.$font-family-base;
+  font-weight: variables.$font-weight-bold;
+  font-size: variables.$font-size-base;
+  text-decoration: none;
+  border-radius: variables.$radius-sm;
+  transition: top variables.$transition-fast;
+
+  &:focus {
+    top: variables.$spacing-md;
+    outline: 2px solid variables.$drk-weiss;
+    outline-offset: 2px;
+  }
+}

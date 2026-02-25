@@ -1,0 +1,369 @@
+/**
+ * Global styles - DRK Corporate Design
+ * Based on: https://styleguide.drk.de
+ */
+
+@use "sass:color";
+@use 'variables';
+@use 'fonts';
+@use 'mixins';
+@use 'reset';
+@use 'layout';
+
+.container {
+  @include mixins.container;
+}
+
+.button {
+  @include mixins.button-reset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: variables.$spacing-sm variables.$spacing-lg;
+  font-family: variables.$font-family-base;
+  font-weight: variables.$font-weight-bold;
+  font-size: variables.$font-size-base;
+  border-radius: variables.$radius-sm;
+  transition: background-color variables.$transition-fast, color variables.$transition-fast,
+    border-color variables.$transition-fast;
+
+  &:focus-visible {
+    @include mixins.focus-outline;
+  }
+
+  &--primary {
+    background-color: variables.$drk-rot;
+    color: variables.$drk-weiss;
+
+    &:hover {
+      background-color: color.adjust(variables.$drk-rot, $lightness: -10%);
+      color: variables.$drk-weiss;
+    }
+  }
+
+  &--secondary {
+    background-color: variables.$drk-dunkelblau;
+    color: variables.$drk-weiss;
+
+    &:hover {
+      background-color: color.adjust(variables.$drk-dunkelblau, $lightness: -10%);
+      color: variables.$drk-weiss;
+    }
+  }
+
+  &--outline {
+    background-color: transparent;
+    border: 2px solid variables.$drk-rot;
+    color: variables.$drk-rot;
+
+    &:hover {
+      background-color: variables.$drk-rot;
+      color: variables.$drk-weiss;
+    }
+  }
+}
+
+.page {
+  min-height: 100vh;
+  padding: variables.$spacing-3xl 0;
+  background-color: variables.$drk-weiss;
+
+  &__title {
+    font-family: variables.$font-family-heading;
+    font-weight: variables.$font-weight-bold;
+    color: variables.$drk-rot;
+    margin-bottom: variables.$spacing-2xl;
+  }
+
+  &__blocks {
+    > * + * {
+      margin-top: 5rem;
+    }
+  }
+}
+
+.block {
+  &--hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    aspect-ratio: 21 / 9;
+    padding: variables.$spacing-3xl 0;
+    background-color: variables.$drk-hellblau;
+    text-align: center;
+    overflow: hidden;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+
+    @media (max-width: #{variables.$breakpoint-md - 1px}) {
+      aspect-ratio: auto;
+      min-height: 50vh;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background-color: variables.$drk-rot;
+      z-index: 3;
+    }
+
+    .block__content {
+      position: relative;
+      z-index: 3;
+      max-width: variables.$container-max-width;
+      padding: 0 variables.$container-padding;
+      margin: 0 auto;
+    }
+
+    .block__hero-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      z-index: 1;
+    }
+
+    &-with-image {
+      color: variables.$drk-weiss;
+      background-color: variables.$drk-schwarz;
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.2) 0%,
+          rgba(0, 0, 0, 0.4) 40%,
+          rgba(0, 0, 0, 0.6) 100%
+        );
+        z-index: 2;
+      }
+
+      .block__heading {
+        color: variables.$drk-weiss;
+        text-shadow:
+          0 2px 4px rgba(0, 0, 0, 0.5),
+          0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .block__subheading {
+        color: rgba(variables.$drk-weiss, 0.95);
+        text-shadow:
+          0 1px 3px rgba(0, 0, 0, 0.5),
+          0 2px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .button {
+        position: relative;
+        z-index: 3;
+      }
+    }
+  }
+
+  &__heading {
+    margin-bottom: variables.$spacing-lg;
+    color: variables.$drk-rot;
+
+    .block--hero & {
+      font-size: variables.$font-size-4xl;
+      line-height: variables.$line-height-tight;
+      margin-bottom: variables.$spacing-lg;
+
+      @include mixins.respond-to(md) {
+        font-size: variables.$font-size-5xl;
+      }
+    }
+
+    .block--text-image & {
+      margin-bottom: variables.$spacing-xl;
+    }
+  }
+
+  &__subheading {
+    font-family: variables.$font-family-base;
+    font-size: variables.$font-size-lg;
+    color: variables.$drk-schwarz;
+    margin-bottom: variables.$spacing-lg;
+
+    .block--hero & {
+      font-size: variables.$font-size-lg;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: variables.$spacing-xl;
+
+      @include mixins.respond-to(md) {
+        font-size: variables.$font-size-xl;
+      }
+    }
+  }
+
+  &__text {
+    font-family: variables.$font-family-base;
+    color: variables.$drk-schwarz;
+    line-height: variables.$line-height-relaxed;
+    margin-bottom: variables.$spacing-xl;
+  }
+
+  &__image {
+    img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+  }
+
+  &--text-image {
+    display: grid;
+    gap: variables.$spacing-2xl;
+    align-items: center;
+    padding-top: variables.$spacing-2xl;
+    padding-bottom: variables.$spacing-3xl;
+
+    @include mixins.respond-to(md) {
+      grid-template-columns: 1fr 1fr;
+      gap: variables.$spacing-3xl;
+      padding-top: variables.$spacing-3xl;
+      padding-bottom: 4rem;
+    }
+
+    &.block--image-left {
+      @include mixins.respond-to(md) {
+        .block__image {
+          order: -1;
+        }
+      }
+    }
+  }
+
+  &--cta {
+    text-align: center;
+    padding: variables.$spacing-3xl variables.$spacing-2xl;
+    background-color: variables.$drk-hellblau;
+    position: relative;
+
+    @include mixins.respond-to(md) {
+      padding: 4rem variables.$spacing-2xl;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background-color: variables.$drk-rot;
+    }
+
+    .block__heading {
+      color: variables.$drk-rot;
+    }
+
+    .block__text {
+      color: variables.$drk-schwarz;
+    }
+  }
+
+  &--faq {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: variables.$spacing-2xl;
+    padding-bottom: variables.$spacing-3xl;
+
+    @include mixins.respond-to(md) {
+      padding-bottom: 4rem;
+    }
+  }
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: variables.$spacing-lg;
+}
+
+.faq-item {
+  padding: variables.$spacing-xl;
+  background-color: variables.$drk-hellblau;
+  border-left: 4px solid variables.$drk-rot;
+
+  &__question {
+    margin-bottom: variables.$spacing-md;
+    font-family: variables.$font-family-heading;
+    font-size: variables.$font-size-lg;
+    font-weight: variables.$font-weight-bold;
+    color: variables.$drk-rot;
+  }
+
+  &__answer {
+    font-family: variables.$font-family-base;
+    color: variables.$drk-schwarz;
+    line-height: variables.$line-height-relaxed;
+  }
+}
+
+.legal-content {
+  font-family: variables.$font-family-base;
+  font-size: variables.$font-size-base;
+  line-height: variables.$line-height-relaxed;
+  color: variables.$color-text-primary;
+  max-width: 65ch;
+
+  h2 {
+    font-family: variables.$font-family-heading;
+    font-size: variables.$font-size-xl;
+    font-weight: variables.$font-weight-bold;
+    color: variables.$drk-dunkelblau;
+    margin-top: variables.$spacing-xl;
+    margin-bottom: variables.$spacing-sm;
+  }
+
+  p {
+    margin-bottom: variables.$spacing-md;
+  }
+
+  a {
+    color: variables.$color-link;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+
+    &:hover {
+      color: variables.$color-link-hover;
+    }
+
+    &:focus-visible {
+      @include mixins.focus-outline;
+    }
+  }
+}
+
+blockquote {
+  font-family: variables.$font-family-heading;
+  font-style: italic;
+  font-size: variables.$font-size-xl;
+  color: variables.$drk-dunkelblau;
+  border-left: 4px solid variables.$drk-rot;
+  padding-left: variables.$spacing-lg;
+  margin: variables.$spacing-xl 0;
+
+  cite {
+    display: block;
+    font-family: variables.$font-family-base;
+    font-style: normal;
+    font-weight: variables.$font-weight-bold;
+    font-size: variables.$font-size-base;
+    color: variables.$drk-schwarz;
+    margin-top: variables.$spacing-sm;
+  }
+}

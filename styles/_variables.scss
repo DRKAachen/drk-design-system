@@ -1,0 +1,128 @@
+/**
+ * Design tokens - DRK (Deutsches Rotes Kreuz) Corporate Design
+ * Based on: https://styleguide.drk.de
+ */
+
+@use 'sass:color';
+
+// =============================================================================
+// DRK PRIMARY COLORS
+// =============================================================================
+$drk-rot: #e60005;           // Primary brand red
+$drk-weiss: #ffffff;         // White
+$drk-schwarz: #000000;       // Black
+$drk-grau: #7f7f7f;          // Optional gray (50% black)
+
+// =============================================================================
+// DRK SECONDARY COLORS
+// =============================================================================
+$drk-dunkelblau: #002d55;    // Dark blue (quotes, highlights, disaster comms)
+$drk-hellblau: #ebf5ff;      // Light blue (backgrounds, info boxes)
+$drk-rot-60: #eb8264;        // Red 60% (charts/diagrams)
+$drk-rot-30: #fac3af;        // Red 30% (charts/diagrams)
+$drk-blau-60: #698caf;       // Blue 60% (charts/diagrams)
+$drk-blau-30: #b4c3d7;       // Blue 30% (charts/diagrams)
+
+// =============================================================================
+// SEMANTIC COLOR MAPPINGS
+// =============================================================================
+$color-primary: $drk-rot;
+$color-secondary: $drk-dunkelblau;
+$color-accent: $drk-hellblau;
+
+$color-text-primary: $drk-schwarz;
+$color-text-secondary: $drk-grau;
+$color-text: $color-text-primary;
+$color-text-muted: $color-text-secondary;
+$color-text-light: color.adjust($drk-grau, $lightness: 20%);
+$color-text-on-dark: $drk-weiss;
+
+$color-background: $drk-weiss;
+$color-background-light: $drk-hellblau;
+$color-background-dark: $drk-dunkelblau;
+
+$color-border: #e0e0e0;
+$color-border-dark: #cccccc;
+
+$color-error: $drk-rot;
+$color-success: #28a745;
+$color-warning: #ffc107;
+
+$color-link: $drk-dunkelblau;
+$color-link-hover: color.adjust($drk-dunkelblau, $lightness: -10%);
+
+// =============================================================================
+// SPACING (8px grid)
+// =============================================================================
+$spacing-xs: 0.25rem;   // 4px
+$spacing-sm: 0.5rem;    // 8px
+$spacing-md: 1rem;      // 16px
+$spacing-lg: 1.5rem;    // 24px
+$spacing-xl: 2rem;      // 32px
+$spacing-2xl: 3rem;     // 48px
+$spacing-3xl: 4rem;     // 64px
+
+// =============================================================================
+// TYPOGRAPHY - DRK Fonts
+// =============================================================================
+$font-family-heading: 'Merriweather', Georgia, 'Times New Roman', serif;
+$font-family-base: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+$font-family-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas,
+  'Courier New', monospace;
+
+$font-size-xs: 0.75rem;    // 12px
+$font-size-sm: 0.875rem;   // 14px
+$font-size-base: 1rem;     // 16px (body)
+$font-size-lg: 1.125rem;   // 18px
+$font-size-xl: 1.25rem;    // 20px
+$font-size-2xl: 1.5rem;    // 24px
+$font-size-3xl: 1.875rem;  // 30px
+$font-size-4xl: 2.25rem;   // 36px
+$font-size-5xl: 3rem;      // 48px
+
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+$line-height-tight: 1.25;
+$line-height-normal: 1.5;
+$line-height-relaxed: 1.75;
+
+// Breakpoints
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+$breakpoint-2xl: 1536px;
+
+// Layout
+$container-max-width: 1200px;
+$container-padding: $spacing-md;
+
+// Z-index scale
+$z-index-dropdown: 1000;
+$z-index-sticky: 1020;
+$z-index-fixed: 1030;
+$z-index-modal-backdrop: 1040;
+$z-index-modal: 1050;
+$z-index-popover: 1060;
+$z-index-tooltip: 1070;
+
+// Transitions
+$transition-fast: 150ms ease;
+$transition-base: 250ms ease;
+$transition-slow: 350ms ease;
+
+// Shadows
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+// Border radius
+$radius-sm: 0.25rem;
+$radius-md: 0.5rem;
+$radius-lg: 0.75rem;
+$radius-xl: 1rem;
+$radius-full: 9999px;

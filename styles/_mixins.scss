@@ -1,0 +1,94 @@
+/**
+ * Reusable SCSS mixins for common patterns.
+ * Uses full package path for variables so resolution works when consumed by apps.
+ */
+@use '@drk/design-system/styles/variables' as variables;
+
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == sm {
+    @media (min-width: variables.$breakpoint-sm) {
+      @content;
+    }
+  } @else if $breakpoint == md {
+    @media (min-width: variables.$breakpoint-md) {
+      @content;
+    }
+  } @else if $breakpoint == lg {
+    @media (min-width: variables.$breakpoint-lg) {
+      @content;
+    }
+  } @else if $breakpoint == xl {
+    @media (min-width: variables.$breakpoint-xl) {
+      @content;
+    }
+  } @else if $breakpoint == 2xl {
+    @media (min-width: variables.$breakpoint-2xl) {
+      @content;
+    }
+  }
+}
+
+@mixin container {
+  width: 100%;
+  max-width: variables.$container-max-width;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: variables.$container-padding;
+  padding-right: variables.$container-padding;
+}
+
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+@mixin clearfix {
+  &::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+@mixin focus-outline {
+  outline: 2px solid variables.$drk-rot;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(variables.$drk-weiss, 0.9);
+}
+
+@mixin focus-outline-light {
+  outline: 2px solid variables.$drk-weiss;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(variables.$drk-rot, 0.3);
+}
+
+@mixin button-reset {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+@mixin text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin text-truncate-lines($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

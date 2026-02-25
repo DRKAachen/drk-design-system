@@ -1,0 +1,56 @@
+/**
+ * Button component styles - DRK Corporate Design
+ */
+
+@use 'sass:color';
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.button {
+  @include button-reset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-sm $spacing-lg;
+  font-family: $font-family-base;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-base;
+  border-radius: $radius-sm;
+  transition: background-color $transition-fast, color $transition-fast,
+    border-color $transition-fast;
+
+  &:focus-visible {
+    @include focus-outline;
+  }
+
+  &--primary {
+    background-color: $drk-rot;
+    color: $drk-weiss;
+
+    &:hover {
+      background-color: color.adjust($drk-rot, $lightness: -10%);
+      color: $drk-weiss;
+    }
+  }
+
+  &--secondary {
+    background-color: $drk-dunkelblau;
+    color: $drk-weiss;
+
+    &:hover {
+      background-color: color.adjust($drk-dunkelblau, $lightness: -10%);
+      color: $drk-weiss;
+    }
+  }
+
+  &--outline {
+    border: 2px solid $drk-rot;
+    color: $drk-rot;
+    background-color: transparent;
+
+    &:hover {
+      background-color: $drk-rot;
+      color: $drk-weiss;
+    }
+  }
+}
