@@ -73,6 +73,18 @@ For local development before publishing (e.g. from a sibling folder):
 }
 ```
 
+## Local Showcase App
+
+This repository includes a local Next.js showcase consumer app in `showcase/` to preview all components in one page without changing the published package surface.
+
+Run locally:
+
+```bash
+cd showcase
+npm install
+npm run dev
+```
+
 ## Usage
 
 ### Next.js config
