@@ -3,8 +3,8 @@
  */
 
 import { createClient } from '@sanity/client'
-import { SanityImageSource } from '@sanity/image-url/lib/types/types'
 import imageUrlBuilder from '@sanity/image-url'
+import type { SanityImageSource } from '@sanity/image-url'
 
 const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '',

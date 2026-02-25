@@ -8,7 +8,7 @@ import { ButtonHTMLAttributes, cloneElement, isValidElement, ReactElement, React
 interface ButtonPropsBase {
   variant?: 'primary' | 'secondary' | 'outline'
   size?: 'sm' | 'md' | 'lg'
-  children: ReactNode
+  children?: ReactNode
   className?: string
   disabled?: boolean
 }

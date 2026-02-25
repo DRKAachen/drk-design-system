@@ -5,6 +5,7 @@
  */
 
 import { CONSENT_STORAGE_KEY } from '../../lib/cookies/consent'
+import { CONSENT_COOKIE_KEY } from '../../lib/cookies/consent'
 import styles from './CookieBanner.module.scss'
 
 interface CookieSettingsLinkProps {
@@ -24,6 +25,7 @@ export default function CookieSettingsLink({
     if (typeof window === 'undefined') return
     try {
       window.localStorage.removeItem(CONSENT_STORAGE_KEY)
+      document.cookie = `${CONSENT_COOKIE_KEY}=; Path=/; Max-Age=0; SameSite=Lax`
       window.location.reload()
     } catch {
       window.location.reload()

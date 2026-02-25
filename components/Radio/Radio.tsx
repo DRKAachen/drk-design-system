@@ -2,7 +2,7 @@
  * Radio component - accessible radio group with shared name and optional error.
  */
 
-import { InputHTMLAttributes, forwardRef } from 'react'
+import { InputHTMLAttributes, forwardRef, useId } from 'react'
 import styles from './Radio.module.scss'
 
 export interface RadioOption {
@@ -27,7 +27,8 @@ const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
   { options, error, hint, id: idProp, className, name, value: selectedValue, ...props },
   ref
 ) {
-  const groupId = idProp || `radio-${name || Math.random().toString(36).slice(2, 9)}`
+  const generatedId = useId()
+  const groupId = idProp || `radio-${name || generatedId}`
   return (
     <div
       className={[styles.radioWrap, error && styles.radioWrapError, className].filter(Boolean).join(' ')}

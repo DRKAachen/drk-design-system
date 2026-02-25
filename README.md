@@ -130,6 +130,8 @@ Create `middleware.ts` at your project root and re-export the design system midd
 export { middleware, config } from '@drk/design-system/middleware'
 ```
 
+For hardened multi-domain setups behind a proxy/CDN, set `ALLOWED_SITE_HOSTNAMES` to an explicit comma-separated list. The middleware will normalize the incoming host and ignore hosts outside this allowlist.
+
 ### SCSS in your app
 
 Import design tokens or globals as needed:
@@ -172,6 +174,9 @@ Your site must set:
 - `NEXT_PUBLIC_SANITY_DATASET` (e.g. `production`)
 - `NEXT_PUBLIC_SANITY_API_VERSION` (e.g. `2024-01-01`)
 - Optional: `NEXT_PUBLIC_DEFAULT_SITE_HOSTNAME` for fallback site
+- Optional: `ALLOWED_SITE_HOSTNAMES` (comma-separated, e.g. `example.de,www.example.de`) to allow only trusted hostnames in middleware
+
+Cookie consent is stored in both `localStorage` and a first-party cookie (`drk_cookie_consent_v1`) so consuming apps can read consent server-side before loading optional services. Consent is refreshed after 12 months (banner is shown again when stored consent is older than the retention window).
 
 ## Fonts (GDPR/DSGVO)
 
@@ -180,6 +185,14 @@ Fonts are not included in the package. Place Merriweather (and any other) font f
 ## Versioning
 
 This package follows semantic versioning (semver). When you publish a new version, consuming apps can update manually or use automated dependency updates.
+
+### Publishing
+
+Publishing is intentionally explicit: trigger the publish workflow manually (`workflow_dispatch`) or via a GitHub release. The workflow no longer auto-bumps versions on every push to `main`. Update `package.json` first, then publish.
+
+## Security
+
+See `SECURITY.md` for vulnerability reporting and disclosure process.
 
 ### Automated updates in consuming apps (Dependabot or Renovate)
 

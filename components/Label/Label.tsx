@@ -2,7 +2,7 @@
  * Label component - accessible form label with optional required indicator and error.
  */
 
-import { LabelHTMLAttributes } from 'react'
+import { LabelHTMLAttributes, useId } from 'react'
 import styles from './Label.module.scss'
 
 export interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
@@ -27,7 +27,8 @@ export default function Label({
   id: idProp,
   ...props
 }: LabelProps) {
-  const id = idProp || `label-${Math.random().toString(36).slice(2, 9)}`
+  const generatedId = useId()
+  const id = idProp || `label-${generatedId}`
   const errorId = error ? `${id}-error` : undefined
   const hintId = hint ? `${id}-hint` : undefined
   return (
