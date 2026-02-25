@@ -1,0 +1,79 @@
+/**
+ * Modal component styles - DRK Corporate Design
+ */
+
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: $z-index-modal-backdrop;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-lg;
+  background-color: rgba($drk-schwarz, 0.5);
+  overflow-y: auto;
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 32rem;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  background-color: $drk-weiss;
+  border-radius: $radius-md;
+  box-shadow: $shadow-xl;
+  z-index: $z-index-modal;
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: $spacing-md;
+    padding: $spacing-lg $spacing-xl;
+    border-bottom: 1px solid $color-border;
+    flex-shrink: 0;
+  }
+
+  &__title {
+    margin: 0;
+    font-family: $font-family-heading;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $drk-rot;
+  }
+
+  &__close {
+    @include button-reset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: $color-text-secondary;
+    border-radius: $radius-sm;
+    transition: color $transition-fast, background-color $transition-fast;
+
+    &:hover {
+      color: $drk-schwarz;
+      background-color: $color-background-light;
+    }
+
+    &:focus-visible {
+      @include focus-outline;
+    }
+  }
+
+  &__body {
+    padding: $spacing-xl;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+  }
+}

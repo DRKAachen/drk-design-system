@@ -1,0 +1,24 @@
+# Copy this file into your consuming app repo as .github/dependabot.yml
+# to get automatic PRs when a new version of @drk/design-system is published.
+#
+# Prerequisites:
+# - Your app can resolve @drk/design-system (e.g. .npmrc with
+#   @drk:registry=https://npm.pkg.github.com and auth for private packages).
+#
+# See README "Automated updates in consuming apps" for details.
+
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    groups:
+      design-system:
+        patterns:
+          - "@drk/design-system*"
+        update-types:
+          - "minor"
+          - "patch"

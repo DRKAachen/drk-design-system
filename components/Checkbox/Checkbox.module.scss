@@ -1,0 +1,59 @@
+/**
+ * Checkbox component styles - DRK Corporate Design
+ */
+
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.checkboxWrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: $spacing-sm;
+}
+
+.checkboxWrapError {
+  .checkbox {
+    border-color: $color-error;
+  }
+  .checkboxLabel {
+    color: $color-error;
+  }
+}
+
+.checkbox {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+  margin-top: 2px;
+  flex-shrink: 0;
+  accent-color: $drk-rot;
+  cursor: pointer;
+
+  &:focus-visible {
+    @include focus-outline;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+  }
+}
+
+.checkboxLabel {
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  cursor: pointer;
+  flex: 1;
+  min-width: 0;
+}
+
+.checkboxHint {
+  width: 100%;
+  font-size: $font-size-xs;
+  color: $color-text-muted;
+  margin-top: -$spacing-xs;
+  padding-left: calc(1.25rem + #{$spacing-sm});
+}

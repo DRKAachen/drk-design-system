@@ -47,3 +47,8 @@ export async function middleware(request: NextRequest) {
     },
   })
 }
+
+/** Next.js middleware matcher: run on all paths except static and API. */
+export const config = {
+  matcher: ['/((?!_next|api|sanity).*)'],
+}

@@ -4,13 +4,14 @@
  * Legal page component that renders Portable Text content from Sanity.
  */
 
-import { PortableText, PortableTextComponents } from '@portabletext/react'
+import { PortableText, PortableTextComponents, type PortableTextBlock } from '@portabletext/react'
 import Link from 'next/link'
 import styles from './LegalPage.module.scss'
 
 interface LegalPageProps {
   title: string
-  content: any[]
+  /** Portable Text block array from Sanity (e.g. legalPage.content). */
+  content: PortableTextBlock[]
   lastUpdated?: string
 }
 

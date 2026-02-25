@@ -1,0 +1,50 @@
+/**
+ * Input component styles - DRK Corporate Design
+ */
+
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.input {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  padding: $spacing-sm $spacing-md;
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  line-height: $line-height-normal;
+  color: $color-text-primary;
+  background-color: $color-background;
+  border: 2px solid $color-border;
+  border-radius: $radius-sm;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+
+  &::placeholder {
+    color: $color-text-muted;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $drk-rot;
+    box-shadow: 0 0 0 3px rgba($drk-rot, 0.2);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+    background-color: $color-background-light;
+  }
+
+  &Error {
+    border-color: $color-error;
+
+    &:focus {
+      border-color: $color-error;
+      box-shadow: 0 0 0 3px rgba($color-error, 0.2);
+    }
+  }
+
+  &FullWidth {
+    width: 100%;
+  }
+}

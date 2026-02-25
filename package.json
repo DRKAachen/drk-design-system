@@ -14,7 +14,7 @@
     "./lib/*": "./lib/*",
     "./middleware": "./middleware.ts"
   },
-  "files": ["components", "styles", "lib", "index.ts", "middleware.ts"],
+  "files": ["components", "styles", "lib", "index.ts", "middleware.ts", "templates"],
   "repository": {"type": "git", "url": "https://github.com/YOUR_ORG/drk-design-system.git"},
   "publishConfig": {"registry": "https://npm.pkg.github.com"},
   "peerDependencies": {

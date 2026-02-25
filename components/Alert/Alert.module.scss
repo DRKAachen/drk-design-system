@@ -1,0 +1,67 @@
+/**
+ * Alert component styles - DRK Corporate Design
+ */
+
+@use 'sass:color';
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.alert {
+  padding: $spacing-md $spacing-lg;
+  border-radius: $radius-sm;
+  border-left: 4px solid;
+
+  &__title {
+    margin: 0 0 $spacing-xs 0;
+    font-family: $font-family-heading;
+    font-weight: $font-weight-bold;
+    font-size: $font-size-base;
+  }
+
+  &__content {
+    font-family: $font-family-base;
+    font-size: $font-size-sm;
+    line-height: $line-height-relaxed;
+    margin: 0;
+  }
+
+  &--success {
+    background-color: rgba($color-success, 0.12);
+    border-left-color: $color-success;
+    color: color.adjust($color-success, $lightness: -15%);
+
+    .alert__title {
+      color: color.adjust($color-success, $lightness: -20%);
+    }
+  }
+
+  &--error {
+    background-color: rgba($color-error, 0.1);
+    border-left-color: $color-error;
+    color: $drk-schwarz;
+
+    .alert__title {
+      color: $color-error;
+    }
+  }
+
+  &--warning {
+    background-color: rgba($color-warning, 0.2);
+    border-left-color: $color-warning;
+    color: color.adjust($color-warning, $lightness: -25%);
+
+    .alert__title {
+      color: color.adjust($color-warning, $lightness: -30%);
+    }
+  }
+
+  &--info {
+    background-color: $drk-hellblau;
+    border-left-color: $drk-dunkelblau;
+    color: $drk-schwarz;
+
+    .alert__title {
+      color: $drk-dunkelblau;
+    }
+  }
+}
