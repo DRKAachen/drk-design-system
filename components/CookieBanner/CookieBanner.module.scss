@@ -75,7 +75,8 @@
   }
 
   &__btnPrimary,
-  &__btnSecondary {
+  &__btnSecondary,
+  &__btnGhost {
     @include button-reset;
     font-family: $font-family-base;
     font-weight: $font-weight-bold;
@@ -107,6 +108,50 @@
 
     &:hover {
       background-color: rgba($drk-weiss, 0.15);
+    }
+  }
+
+  &__btnGhost {
+    background-color: rgba($drk-weiss, 0.1);
+    color: $drk-weiss;
+    border: 1px solid rgba($drk-weiss, 0.4);
+
+    &:hover {
+      background-color: rgba($drk-weiss, 0.2);
+    }
+  }
+
+  &__preferences {
+    @include container;
+    margin-top: $spacing-md;
+    background-color: rgba($drk-weiss, 0.08);
+    border: 1px solid rgba($drk-weiss, 0.3);
+    border-radius: $radius-sm;
+    padding: $spacing-md;
+  }
+
+  &__fieldset {
+    margin: 0;
+    padding: 0;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+
+  &__legend {
+    font-weight: $font-weight-bold;
+    margin-bottom: $spacing-sm;
+  }
+
+  &__choice {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    font-size: $font-size-sm;
+
+    input {
+      accent-color: $drk-rot;
     }
   }
 }

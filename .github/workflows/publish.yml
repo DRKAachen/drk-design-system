@@ -1,21 +1,17 @@
-# Publish @drk/design-system to GitHub Packages when source changes on main.
-# Runs only when design-system source files change (not package.json alone) to avoid
-# re-running after the workflow commits the version bump.
+# Publish @drk/design-system to GitHub Packages from an explicit trigger.
+# Version bumps are done intentionally in git before triggering this workflow.
 name: Publish to GitHub Packages
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'components/**'
-      - 'lib/**'
-      - 'styles/**'
-      - 'middleware.ts'
-      - 'index.ts'
+  workflow_dispatch:
+  release:
+    types:
+      - published
 
 permissions:
-  contents: write
+  contents: read
   packages: write
+  id-token: write
 
 jobs:
   publish:
@@ -29,25 +25,33 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
+          cache: 'npm'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@drk'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Bump patch version
-        run: npm version patch --no-git-tag-version
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Test
+        run: npm run test
+
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Verify tag matches package version
+        if: github.event_name == 'release'
+        run: |
+          EXPECTED_TAG="v$(node -p "require('./package.json').version")"
+          if [ "${{ github.event.release.tag_name }}" != "$EXPECTED_TAG" ]; then
+            echo "Release tag (${{ github.event.release.tag_name }}) does not match package version ($EXPECTED_TAG)."
+            exit 1
+          fi
 
       - name: Publish to GitHub Packages
-        run: npm publish
+        run: npm publish --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Commit and push version bump
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add package.json package-lock.json
-          git diff --staged --quiet || git commit -m "chore: release v$(node -p "require('./package.json').version") [skip ci]"
-          git push

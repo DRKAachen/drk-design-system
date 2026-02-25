@@ -46,7 +46,10 @@ const DEV_FALLBACK_SITE: SiteConfig = {
  */
 export async function getSiteByHostname(hostname: string): Promise<SiteConfig | null> {
   try {
-    const cleanHostname = hostname.split(':')[0]
+    const cleanHostname = normalizeHostname(hostname)
+    if (!isValidHostname(cleanHostname)) {
+      return null
+    }
 
     const site = await client.fetch<SiteConfig | null>(siteByHostnameQuery, {
       hostname: cleanHostname,
@@ -82,4 +85,18 @@ export async function getSiteByHostname(hostname: string): Promise<SiteConfig | 
     }
     return null
   }
+}
+
+function normalizeHostname(hostname: string): string {
+  return hostname
+    .split(',')[0]
+    .trim()
+    .toLowerCase()
+    .split(':')[0]
+}
+
+function isValidHostname(hostname: string): boolean {
+  if (!hostname) return false
+  if (hostname === 'localhost') return true
+  return /^[a-z0-9.-]+$/.test(hostname)
 }

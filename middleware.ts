@@ -13,7 +13,8 @@ import type { NextRequest } from 'next/server'
 import { getSiteByHostname } from './lib/site'
 
 export async function middleware(request: NextRequest) {
-  const hostname = request.headers.get('host') || ''
+  const forwardedHost = request.headers.get('x-forwarded-host')
+  const hostname = normalizeHostname(forwardedHost || request.headers.get('host') || '')
   const pathname = request.nextUrl.pathname
 
   if (
@@ -21,6 +22,11 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith('/api') ||
     pathname.startsWith('/sanity')
   ) {
+    return NextResponse.next()
+  }
+
+  if (!isAllowedHostname(hostname)) {
+    console.warn(`Blocked request with non-allowed hostname: ${hostname}`)
     return NextResponse.next()
   }
 
@@ -51,4 +57,23 @@ export async function middleware(request: NextRequest) {
 /** Next.js middleware matcher: run on all paths except static and API. */
 export const config = {
   matcher: ['/((?!_next|api|sanity).*)'],
+}
+
+function normalizeHostname(hostname: string): string {
+  return hostname
+    .split(',')[0]
+    .trim()
+    .toLowerCase()
+    .split(':')[0]
+}
+
+function isAllowedHostname(hostname: string): boolean {
+  if (!hostname) return false
+  const rawAllowlist = process.env.ALLOWED_SITE_HOSTNAMES
+  if (!rawAllowlist) return true
+  const allowlist = rawAllowlist
+    .split(',')
+    .map((entry) => normalizeHostname(entry))
+    .filter(Boolean)
+  return allowlist.includes(hostname)
 }

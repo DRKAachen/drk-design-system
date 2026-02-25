@@ -2,7 +2,7 @@
  * Checkbox component - accessible checkbox with label and optional error.
  */
 
-import { InputHTMLAttributes, forwardRef } from 'react'
+import { InputHTMLAttributes, forwardRef, useId } from 'react'
 import styles from './Checkbox.module.scss'
 
 export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
@@ -21,7 +21,8 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Checkbox(
   { label, error, hint, id: idProp, className, ...props },
   ref
 ) {
-  const id = idProp || `checkbox-${Math.random().toString(36).slice(2, 9)}`
+  const generatedId = useId()
+  const id = idProp || `checkbox-${generatedId}`
   return (
     <div className={[styles.checkboxWrap, error && styles.checkboxWrapError, className].filter(Boolean).join(' ')}>
       <input
