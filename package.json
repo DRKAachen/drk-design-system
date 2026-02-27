@@ -16,7 +16,7 @@
     "./middleware": "./middleware.ts"
   },
   "files": ["components", "styles", "lib", "index.ts", "middleware.ts", "templates"],
-  "repository": {"type": "git", "url": "https://github.com/DRKAachen/drk-design-system.git"},
+  "repository": {"type": "git", "url": "git+https://github.com/DRKAachen/drk-design-system.git"},
   "homepage": "https://github.com/DRKAachen/drk-design-system#readme",
   "bugs": {"url": "https://github.com/DRKAachen/drk-design-system/issues"},
   "publishConfig": {"registry": "https://npm.pkg.github.com"},
