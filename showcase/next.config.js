@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ['@drkaachen/design-system'],
+  transpilePackages: ['@drkaachen/design-system-ui'],
   sassOptions: {
-    includePaths: ['./node_modules/@drkaachen/design-system/styles', './app'],
+    includePaths: ['./node_modules/@drkaachen/design-system-ui/styles', './app'],
   },
 }
 

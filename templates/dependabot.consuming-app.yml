@@ -1,8 +1,8 @@
 # Copy this file into your consuming app repo as .github/dependabot.yml
-# to get automatic PRs when a new version of @drkaachen/design-system is published.
+# to get automatic PRs when new versions of DRK frontend packages are published.
 #
 # Prerequisites:
-# - Your app can resolve @drkaachen/design-system (e.g. .npmrc with
+# - Your app can resolve @drkaachen/design-system-ui (e.g. .npmrc with
 #   @drkaachen:registry=https://npm.pkg.github.com and auth for private packages).
 #
 # See README "Automated updates in consuming apps" for details.
@@ -18,7 +18,9 @@ updates:
     groups:
       design-system:
         patterns:
-          - "@drkaachen/design-system*"
+          - "@drkaachen/design-system-ui*"
+          - "@drkaachen/content-sanity*"
+          - "@drkaachen/next-site-runtime*"
         update-types:
           - "minor"
           - "patch"

@@ -4,8 +4,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { SiteConfig } from '../../lib/site'
-import { urlFor } from '../../lib/sanity/client'
+import { SiteConfig } from '../../lib/site-config'
 import Navigation from '../Navigation/Navigation'
 import styles from './Header.module.scss'
 
@@ -14,7 +13,7 @@ interface HeaderProps {
 }
 
 /**
- * Renders the site header with logo and navigation from Sanity site config.
+ * Renders the site header with optional logo URL and navigation.
  */
 export default function Header({ site }: HeaderProps) {
   if (!site) {
@@ -27,9 +26,7 @@ export default function Header({ site }: HeaderProps) {
     )
   }
 
-  const logoUrl = site.logo
-    ? urlFor(site.logo).height(120).fit('max').auto('format').url()
-    : null
+  const logoUrl = site.logoUrl || null
 
   return (
     <header className={styles.header} role="banner">

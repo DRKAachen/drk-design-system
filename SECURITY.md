@@ -2,7 +2,11 @@
 
 ## Supported Versions
 
-Security updates are provided for the latest published major version of `@drkaachen/design-system`.
+Security updates are provided for the latest published major versions of:
+
+- `@drkaachen/design-system-ui`
+- `@drkaachen/content-sanity`
+- `@drkaachen/next-site-runtime`
 
 | Version | Supported |
 | --- | --- |

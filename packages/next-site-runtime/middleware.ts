@@ -4,13 +4,13 @@
  * to pages and API routes via request headers.
  *
  * Consuming site: create middleware.ts at project root that re-exports this:
- *   import { middleware, config } from '@drkaachen/design-system/middleware'
+ *   import { middleware, config } from '@drkaachen/next-site-runtime/middleware'
  *   export { middleware, config }
  */
 
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { getSiteByHostname } from './lib/site'
+import { getSiteByHostname } from '@drkaachen/content-sanity'
 
 export async function middleware(request: NextRequest) {
   const forwardedHost = request.headers.get('x-forwarded-host')

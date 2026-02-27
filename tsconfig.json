@@ -13,6 +13,6 @@
     "isolatedModules": true,
     "jsx": "react-jsx"
   },
-  "include": ["components", "lib", "index.ts", "middleware.ts","types"],
+  "include": ["components", "lib", "index.ts", "types", "tests"],
   "exclude": ["node_modules"]
 }

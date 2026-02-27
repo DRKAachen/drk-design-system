@@ -1,4 +1,4 @@
-# Publish @drkaachen/design-system to GitHub Packages from an explicit trigger.
+# Publish DRK packages to GitHub Packages from an explicit trigger.
 # Version bumps are done intentionally in git before triggering this workflow.
 name: Publish to GitHub Packages
 
@@ -33,25 +33,29 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Type check
+      - name: Type check root package
         run: npm run typecheck
 
-      - name: Test
+      - name: Type check workspace packages
+        run: npm run typecheck:workspaces
+
+      - name: Test root package
         run: npm run test
 
       - name: Audit production dependencies
         run: npm audit --omit=dev --audit-level=high
 
-      - name: Verify tag matches package version
-        if: github.event_name == 'release'
-        run: |
-          EXPECTED_TAG="v$(node -p "require('./package.json').version")"
-          if [ "${{ github.event.release.tag_name }}" != "$EXPECTED_TAG" ]; then
-            echo "Release tag (${{ github.event.release.tag_name }}) does not match package version ($EXPECTED_TAG)."
-            exit 1
-          fi
-
-      - name: Publish to GitHub Packages
+      - name: Publish UI package
         run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish content-sanity package
+        run: npm publish -w @drkaachen/content-sanity
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish next-site-runtime package
+        run: npm publish -w @drkaachen/next-site-runtime
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

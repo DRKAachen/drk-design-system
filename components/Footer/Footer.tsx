@@ -3,7 +3,7 @@
  */
 
 import Link from 'next/link'
-import { SiteConfig } from '../../lib/site'
+import { SiteConfig } from '../../lib/site-config'
 import CookieSettingsLink from '../CookieBanner/CookieSettingsLink'
 import styles from './Footer.module.scss'
 

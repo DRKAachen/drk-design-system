@@ -6,7 +6,7 @@
 'use client'
 
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { SiteConfig } from '../../lib/site'
+import { SiteConfig } from '../../lib/site-config'
 import styles from './Navigation.module.scss'
 
 interface NavigationProps {

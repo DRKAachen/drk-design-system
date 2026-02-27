@@ -14,7 +14,7 @@
   @include mixins.container;
 }
 
-/* Canonical button styles; prefer the <Button> component. These classes support BlockRenderer and legacy usage. */
+/* Canonical button styles; prefer the <Button> component for interactive UI. */
 .button {
   @include mixins.button-reset;
   display: inline-flex;

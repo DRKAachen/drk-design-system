@@ -1,7 +1,7 @@
 {
-  "name": "@drkaachen/design-system",
+  "name": "@drkaachen/design-system-ui",
   "version": "1.0.0",
-  "description": "DRK shared design system, components, and utilities for multi-site Next.js projects",
+  "description": "DRK shared UI design system for Next.js projects",
   "private": false,
   "license": "UNLICENSED",
   "main": "./index.ts",
@@ -12,25 +12,37 @@
     "./components/*": "./components/*",
     "./components/*/*": "./components/*/*",
     "./styles/*": "./styles/*",
-    "./lib/*": "./lib/*",
-    "./middleware": "./middleware.ts"
+    "./lib/*": "./lib/*"
   },
-  "files": ["components", "styles", "lib", "index.ts", "middleware.ts", "templates"],
-  "repository": {"type": "git", "url": "git+https://github.com/DRKAachen/drk-design-system.git"},
+  "files": [
+    "components",
+    "styles",
+    "lib",
+    "index.ts",
+    "templates"
+  ],
+  "workspaces": [
+    "packages/*",
+    "showcase"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DRKAachen/drk-design-system.git"
+  },
   "homepage": "https://github.com/DRKAachen/drk-design-system#readme",
-  "bugs": {"url": "https://github.com/DRKAachen/drk-design-system/issues"},
-  "publishConfig": {"registry": "https://npm.pkg.github.com"},
+  "bugs": {
+    "url": "https://github.com/DRKAachen/drk-design-system/issues"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "peerDependencies": {
     "next": ">=14.0.0",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },
   "dependencies": {
-    "@portabletext/react": "^6.0.2",
-    "@sanity/client": "^7.16.0",
-    "@sanity/image-url": "^2.0.3",
-    "groq": "^5.12.0",
-    "next-sanity": "^12.0.0",
+    "@fontsource/merriweather": "^5.2.11",
     "sanitize-html": "^2.17.0"
   },
   "devDependencies": {
@@ -44,7 +56,11 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "typecheck:workspaces": "npm run typecheck --workspaces --if-present",
+    "test": "vitest run",
+    "test:workspaces": "npm run test --workspaces --if-present"
   },
-  "engines": {"node": ">=20.0.0"}
+  "engines": {
+    "node": ">=20.0.0"
+  }
 }

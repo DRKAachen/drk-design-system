@@ -1,99 +1,144 @@
-# @drkaachen/design-system
+# DRK Frontend Monorepo
 
-Shared DRK (Deutsches Rotes Kreuz) design system, React components, SCSS tokens, and utilities for multi-site Next.js projects.
+Monorepo for DRK frontend packages with strict separation between UI, CMS adapters, and runtime helpers.
 
-## Contents
+## Package Architecture
 
-- **Components**: Header, Footer, Navigation, Button, BlockRenderer, CookieBanner, LegalPage; **Form**: Label, Input, Textarea, Select, Checkbox, Radio; **Feedback**: Alert, Spinner, Modal
-- **Styles**: DRK corporate design tokens (`_variables.scss`), mixins, reset, layout, fonts, `globals.scss`
-- **Lib**: Site resolution (`getSiteByHostname`), Sanity client and GROQ queries, cookie consent (GDPR/DSGVO), utils, HTML sanitizer (`sanitizeHtml`), block types
-- **Middleware**: Hostname-based multi-site routing for Next.js (re-export `middleware` and `config` from your app's `middleware.ts`)
+### `@drkaachen/design-system-ui` (repo root)
 
-## Components
+UI-only package with:
+- React components
+- SCSS tokens, mixins, globals
+- Cookie consent helpers and components
+- Generic sanitizer helper
 
-All components can be imported from `@drkaachen/design-system` or via deep paths (e.g. `@drkaachen/design-system/components/Button/Button`).
+This package intentionally does **not** include:
+- Sanity client
+- GROQ queries
+- Hostname middleware
 
-### Layout & navigation
+### `@drkaachen/content-sanity` (`packages/content-sanity`)
 
-| Component   | Main props | Description |
-|------------|------------|-------------|
-| **Header** | `site: SiteConfig or null` | Site logo and main navigation from Sanity. |
-| **Footer** | `site: SiteConfig or null` | Footer with legal links (Impressum, Datenschutz, AGB) and cookie settings link. |
-| **Navigation** | `site: SiteConfig` | Main nav (desktop + mobile menu), dropdowns from Sanity. |
+Optional Sanity adapter package:
+- Sanity client and image URL builder (`urlFor`)
+- GROQ queries
+- `getSiteByHostname`
 
-### Actions & content
+### `@drkaachen/next-site-runtime` (`packages/next-site-runtime`)
 
-| Component        | Main props | Description |
-|-----------------|------------|-------------|
-| **Button**      | `variant?: 'primary' / 'secondary' / 'outline'`, `size?: 'sm' / 'md' / 'lg'`, `asChild?`, `disabled?`, plus native button props | Button or link-styled button when `asChild` with `<Link>` or `<a>`. |
-| **BlockRenderer** | `block: BlockRendererBlock` | Renders Sanity content blocks: hero, text+image, CTA, FAQ. |
-| **LegalPage**   | `title`, `content: PortableTextBlock[]`, `lastUpdated?` | Renders Portable Text (e.g. Impressum, Datenschutz). |
+Optional Next.js runtime package:
+- Middleware for hostname-to-site header propagation
+- Runtime helpers for reading site headers
 
-### GDPR / legal
+## Why We Split It
 
-| Component            | Main props | Description |
-|----------------------|------------|-------------|
-| **CookieBanner**     | —          | Cookie consent banner; shown until user accepts or chooses “Nur notwendige”. |
-| **CookieSettingsLink** | `className?`, `children?` | Link/button to reopen cookie settings (clears storage and reloads). |
+- Keeps app templates clean and lightweight by default
+- Avoids forced CMS dependencies in UI-only apps
+- Reduces security/privacy surface when CMS is not needed
+- Better GDPR/DSGVO risk control by enabling integrations explicitly per app
 
-### Form
+## Install in Consuming Apps
 
-| Component   | Main props | Description |
-|------------|------------|-------------|
-| **Label**  | `required?`, `error?`, `hint?`, `htmlFor?`, plus native label props | Accessible label with optional required asterisk, error text, and hint. |
-| **Input**  | `error?`, `fullWidth?`, plus native input props | Single-line text input. |
-| **Textarea** | `error?`, `fullWidth?`, plus native textarea props | Multi-line text input. |
-| **Select** | `options: { value, label, disabled? }[]`, `placeholder?`, `error?`, `fullWidth?`, plus native select props | Native select with styled dropdown. |
-| **Checkbox** | `label: ReactNode`, `error?`, `hint?`, plus native checkbox props | Checkbox with inline label. |
-| **Radio**  | `options: { value, label, disabled? }[]`, `name`, `value?` (controlled), `error?`, `hint?`, plus native input props | Radio group. |
-
-### Feedback
-
-| Component | Main props | Description |
-|-----------|------------|-------------|
-| **Alert** | `variant?: 'success' / 'error' / 'warning' / 'info'`, `title?`, `children` | Inline message (e.g. form validation, success). |
-| **Spinner** | `size?: 'sm' \| 'md' \| 'lg'`, `aria-label?` (default: "Laden") | Loading indicator. |
-| **Modal**  | `open`, `onClose`, `title`, `showCloseButton?` (default: true) | Dialog overlay; closes on Escape or backdrop click. |
-
-## Installation
-
-In your Next.js site project:
+### 1) UI-only baseline (recommended default)
 
 ```bash
-npm install @drkaachen/design-system
+npm install @drkaachen/design-system-ui
 ```
 
-The package is intended for private distribution via GitHub Packages inside DRK environments.
+### 2) Add Sanity only if required
 
-For local development before publishing (e.g. from a sibling folder):
+```bash
+npm install @drkaachen/content-sanity @drkaachen/next-site-runtime
+```
 
-```json
-{
-  "dependencies": {
-    "@drkaachen/design-system": "file:../drk-design-system"
+## UI Package Usage (`@drkaachen/design-system-ui`)
+
+Import globals once in your root layout:
+
+```tsx
+import '@drkaachen/design-system-ui/styles/globals.scss'
+```
+
+Use UI components from package root:
+
+```tsx
+import {
+  Header,
+  Footer,
+  CookieBanner,
+  Button,
+  type SiteConfig,
+} from '@drkaachen/design-system-ui'
+```
+
+UI `SiteConfig` is CMS-agnostic and expects a plain `logoUrl` string:
+
+```tsx
+const site: SiteConfig = {
+  _id: 'site-1',
+  name: 'DRK Aachen',
+  hostname: 'example.de',
+  defaultLocale: 'de',
+  logoUrl: '/images/logo.svg',
+  navigation: [{ label: 'Startseite', href: '/' }],
+}
+```
+
+## Optional Sanity Integration
+
+Get site content via `@drkaachen/content-sanity`, then map it to UI shape:
+
+```tsx
+import { getSiteByHostname, urlFor } from '@drkaachen/content-sanity'
+import type { SiteConfig as UiSiteConfig } from '@drkaachen/design-system-ui'
+
+export async function getUiSite(hostname: string): Promise<UiSiteConfig | null> {
+  const cmsSite = await getSiteByHostname(hostname)
+  if (!cmsSite) return null
+
+  return {
+    _id: cmsSite._id,
+    name: cmsSite.name,
+    hostname: cmsSite.hostname,
+    defaultLocale: cmsSite.defaultLocale,
+    logoUrl: cmsSite.logo ? urlFor(cmsSite.logo).height(120).fit('max').auto('format').url() : undefined,
+    navigation: cmsSite.navigation,
+    footerLinks: cmsSite.footerLinks,
   }
 }
 ```
 
-## Local Showcase App
+If middleware-based site header propagation is needed:
 
-This repository includes a local Next.js showcase consumer app in `showcase/` to preview all components in one page without changing the published package surface.
-
-Run locally:
-
-```bash
-cd showcase
-npm install
-npm run dev
+```ts
+// middleware.ts in consuming app root
+export { middleware, config } from '@drkaachen/next-site-runtime/middleware'
 ```
 
-## Private Consumption (drk-app-template)
+## Breaking Changes (Hard Cut)
 
-You can configure private package consumption once in `drk-app-template` so all future apps created from it inherit the setup.
+The previous mixed package surface was removed by design.
 
-### 1) Commit-safe `.npmrc` in the template repo
+- Old package name `@drkaachen/design-system` -> `@drkaachen/design-system-ui`
+- Removed from UI package:
+  - `getSiteByHostname`
+  - `client`, `urlFor`, GROQ query exports
+  - `middleware` export
+  - `BlockRenderer` and `LegalPage` components
+- New optional packages:
+  - `@drkaachen/content-sanity`
+  - `@drkaachen/next-site-runtime`
 
-Create `.npmrc` in `drk-app-template` with:
+## App Template Guidance
+
+For `drk-app-template`:
+- Keep default dependency set to `@drkaachen/design-system-ui` only
+- Provide an optional documented module/feature toggle for Sanity setup
+- Only add Sanity env vars and middleware in apps that explicitly enable Sanity
+
+## Private Registry Setup
+
+Use `.npmrc` in consuming apps:
 
 ```ini
 @drkaachen:registry=https://npm.pkg.github.com
@@ -101,246 +146,50 @@ Create `.npmrc` in `drk-app-template` with:
 always-auth=true
 ```
 
-This file is safe to commit because it references an environment variable, not a hardcoded token.
+Template file is available at `templates/npmrc.consuming-app.private`.
 
-Template file available in this repository: `templates/npmrc.consuming-app.private`.
+## Automated Updates in Consuming Apps
 
-### 2) CI setup once (recommended: org secret)
+Use Dependabot with the template:
 
-Store a `NODE_AUTH_TOKEN` secret (with `read:packages`) in GitHub org/repo secrets and expose it in workflows:
+- `templates/dependabot.consuming-app.yml`
 
-```yaml
-env:
-  NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-```
+It tracks:
+- `@drkaachen/design-system-ui`
+- `@drkaachen/content-sanity`
+- `@drkaachen/next-site-runtime`
 
-### 3) Local developer onboarding (one-time per machine)
+## Local Development (Monorepo)
 
-Developers set a personal token once (never commit it):
-
-- PowerShell:
-
-```powershell
-[System.Environment]::SetEnvironmentVariable("NODE_AUTH_TOKEN", "ghp_xxx", "User")
-```
-
-- macOS/Linux shell profile:
+Install dependencies at repository root:
 
 ```bash
-export NODE_AUTH_TOKEN=ghp_xxx
+npm install
 ```
 
-After setting the token, restart the terminal and run `npm install`.
+Run quality checks:
 
-## Usage
-
-### Next.js config
-
-Ensure the design system is transpiled and SCSS can resolve its styles:
-
-```js
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  transpilePackages: ['@drkaachen/design-system'],
-  sassOptions: {
-    includePaths: ['./node_modules/@drkaachen/design-system/styles', './styles'],
-  },
-  // ... images, etc.
-}
-module.exports = nextConfig
+```bash
+npm run typecheck
+npm run typecheck:workspaces
+npm run test
 ```
 
-### Layout and components
+Run showcase:
 
-```tsx
-// app/layout.tsx
-import { getSiteByHostname } from '@drkaachen/design-system'
-import Header from '@drkaachen/design-system/components/Header/Header'
-import Footer from '@drkaachen/design-system/components/Footer/Footer'
-import CookieBanner from '@drkaachen/design-system/components/CookieBanner/CookieBanner'
-import '@drkaachen/design-system/styles/globals.scss'
-
-export default async function RootLayout({ children }) {
-  const headersList = await headers()
-  const hostname = headersList.get('host') || ''
-  const site = await getSiteByHostname(hostname)
-
-  return (
-    <html lang={site?.defaultLocale || 'de'}>
-      <body className="app" data-site-id={site?._id}>
-        <a href="#main-content" className="skip-link">Zum Inhalt springen</a>
-        <Header site={site} />
-        <main id="main-content" className="main">{children}</main>
-        <Footer site={site} />
-        <CookieBanner />
-      </body>
-    </html>
-  )
-}
+```bash
+cd showcase
+npm run dev
 ```
 
-### Middleware
+## Fonts and GDPR/DSGVO
 
-Create `middleware.ts` at your project root and re-export the design system middleware:
+Merriweather is self-hosted via `@fontsource/merriweather` inside `@drkaachen/design-system-ui`.
 
-```ts
-// middleware.ts (at project root)
-export { middleware, config } from '@drkaachen/design-system/middleware'
-```
-
-For hardened multi-domain setups behind a proxy/CDN, set `ALLOWED_SITE_HOSTNAMES` to an explicit comma-separated list. The middleware will normalize the incoming host and ignore hosts outside this allowlist.
-
-### SCSS in your app
-
-Import design tokens or globals as needed:
-
-```scss
-@use '@drkaachen/design-system/styles/variables' as *;
-@use '@drkaachen/design-system/styles/mixins' as *;
-// Or import the full globals in your root layout:
-// import '@drkaachen/design-system/styles/globals.scss'
-```
-
-### Form and feedback components
-
-Use the design system components for forms and feedback:
-
-```tsx
-import { Label, Input, Button, Alert, Spinner, Modal } from '@drkaachen/design-system'
-
-// Form field with label and error
-<Label htmlFor="email" required error={errors.email}>E-Mail</Label>
-<Input id="email" type="email" error={!!errors.email} />
-
-// Alert (success, error, warning, info)
-<Alert variant="error" title="Fehler">Bitte füllen Sie alle Pflichtfelder aus.</Alert>
-
-// Loading state
-<Button disabled><Spinner size="sm" aria-label="Wird gesendet" /> Absenden</Button>
-
-// Modal
-<Modal open={isOpen} onClose={() => setIsOpen(false)} title="Cookie-Einstellungen">
-  ...
-</Modal>
-```
-
-### Environment variables
-
-Your site must set:
-
-- `NEXT_PUBLIC_SANITY_PROJECT_ID`
-- `NEXT_PUBLIC_SANITY_DATASET` (e.g. `production`)
-- `NEXT_PUBLIC_SANITY_API_VERSION` (e.g. `2024-01-01`)
-- Optional: `NEXT_PUBLIC_DEFAULT_SITE_HOSTNAME` for fallback site
-- Optional: `ALLOWED_SITE_HOSTNAMES` (comma-separated, e.g. `example.de,www.example.de`) to allow only trusted hostnames in middleware
-
-Cookie consent is stored in both `localStorage` and a first-party cookie (`drk_cookie_consent_v1`) so consuming apps can read consent server-side before loading optional services. Consent is refreshed after 12 months (banner is shown again when stored consent is older than the retention window).
-
-## Fonts (GDPR/DSGVO)
-
-Fonts are not included in the package. Place Merriweather (and any other) font files in your app's `public/fonts/` and ensure `globals.scss` (or `_fonts.scss`) is loaded so `url('/fonts/...')` resolves correctly.
-
-## Versioning
-
-This package follows semantic versioning (semver). When you publish a new version, consuming apps can update manually or use automated dependency updates.
-
-### Publishing
-
-Publishing is intentionally explicit: trigger the publish workflow manually (`workflow_dispatch`) or via a GitHub release. The workflow no longer auto-bumps versions on every push to `main`. Update `package.json` first, then publish.
-
-Private release prerequisites:
-
-- Publishing happens via `GITHUB_TOKEN` in GitHub Actions (package write permission required).
-- `package.json` version is updated intentionally.
-- CI (`typecheck`, tests, audit) is green.
+- No per-project font file copy is required.
+- Do not load fonts from external CDNs by default.
+- Font files are bundled with the package and served locally by the consuming app build.
 
 ## Security
 
 See `SECURITY.md` for vulnerability reporting and disclosure process.
-
-### Automated updates in consuming apps (Dependabot or Renovate)
-
-**Do I need to do anything now? What’s the workflow?**
-
-- **Yes, one-time setup per app** (including **drk-app-template**): add the Dependabot config once (see below). After that, when you publish a new version of the design system, GitHub will open a PR in that repo to bump `@drkaachen/design-system`. You review and merge; no manual version hunting.
-- **New projects** (e.g. from **drk-app-template**): put the Dependabot config **into drk-app-template**. Every app you create from that template will then get automatic PRs for design system updates. You don’t have to do anything per new project.
-- **Updating drk-app-template itself**: Add `.github/dependabot.yml` to drk-app-template (copy from this repo’s `templates/dependabot.consuming-app.yml`). When you release a new design system version, Dependabot will open a PR in drk-app-template to update the dependency; merge it and the template is updated. New apps you create from the template after that will start with the latest design system version.
-
-**Summary:** One-time: add Dependabot config to each consuming repo (including drk-app-template). From then on: you publish design system → Dependabot opens PRs in those repos → you merge → done.
-
-**One-time setup for drk-app-template (and any other consuming app):**
-
-1. In the app repo (e.g. `drk-app-template`), create `.github/dependabot.yml`.
-2. Copy the contents from this repo’s **`templates/dependabot.consuming-app.yml`** (or from the YAML block below).
-3. Commit and push. Dependabot will run on the schedule (e.g. weekly) and open a PR when a new `@drkaachen/design-system` version exists.
-
----
-
-Consuming apps can get automatic pull requests when a new version of `@drkaachen/design-system` is published. Two common options:
-
-**Option 1: Dependabot** (built into GitHub)
-
-Copy the example config from this repo into your consuming app:
-
-```bash
-mkdir -p .github
-cp node_modules/@drkaachen/design-system/templates/dependabot.consuming-app.yml .github/dependabot.yml
-```
-
-Or create `.github/dependabot.yml` in the **consuming app’s repo** with:
-
-```yaml
-# .github/dependabot.yml (in your Next.js / consuming app repo)
-version: 2
-updates:
-  # npm dependencies (includes @drkaachen/design-system)
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 5
-    # Optional: group design system updates with a clear PR title
-    groups:
-      design-system:
-        patterns:
-          - "@drkaachen/design-system*"
-        update-types:
-          - "minor"
-          - "patch"
-```
-
-- Full example file in this repo: **`templates/dependabot.consuming-app.yml`** (copy to your app’s `.github/dependabot.yml`).
-- Dependabot will open PRs when it finds a newer version on GitHub Packages.
-- Ensure your consuming app can resolve the private package via `.npmrc` and a token.
-
-**Option 2: Renovate** (GitHub App: [renovateapp.com](https://www.renovate.com))
-
-In the **consuming app’s repo**, add a config file. Example `renovate.json` in the repo root:
-
-```json
-{
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
-  "schedule": ["before 10am on monday"],
-  "packageRules": [
-    {
-      "matchPackagePatterns": ["^@drkaachen/design-system"],
-      "groupName": "drk-design-system",
-      "schedule": ["at any time"]
-    }
-  ]
-}
-```
-
-Or enable Renovate on the repo via GitHub; it will propose this (or a minimal) config. The rule above groups `@drkaachen/design-system` updates into a single PR and can check “at any time” so you get PRs soon after you publish.
-
-**Summary**
-
-| Tool        | Config location              | What it does |
-|------------|-----------------------------|--------------|
-| Dependabot | `.github/dependabot.yml`    | Opens PRs when newer versions of npm deps (including `@drkaachen/design-system`) exist. |
-| Renovate   | `renovate.json` or GitHub UI | Same idea; more options (grouping, scheduling, labels). |
-
-After you merge the PR in the consuming app, run `npm install` (or your CI does it) and the app will use the new design system version.

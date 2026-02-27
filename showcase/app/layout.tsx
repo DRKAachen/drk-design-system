@@ -3,7 +3,7 @@ import '../../styles/globals.scss'
 
 export const metadata: Metadata = {
   title: 'DRK Design System Showcase',
-  description: 'Interactive component showcase for @drkaachen/design-system',
+  description: 'Interactive component showcase for @drkaachen/design-system-ui',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

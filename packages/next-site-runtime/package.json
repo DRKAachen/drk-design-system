@@ -1,0 +1,30 @@
+{
+  "name": "@drkaachen/next-site-runtime",
+  "version": "1.0.0",
+  "description": "Optional Next.js site runtime helpers for DRK apps",
+  "homepage": "https://github.com/DRKAachen/drk-design-system/tree/main/packages/next-site-runtime",
+  "private": false,
+  "license": "UNLICENSED",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./middleware": "./middleware.ts",
+    "./lib/*": "./lib/*"
+  },
+  "files": ["lib", "index.ts", "middleware.ts", "README.md"],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "peerDependencies": {
+    "next": ">=14.0.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "dependencies": {
+    "@drkaachen/content-sanity": "file:../content-sanity"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  }
+}

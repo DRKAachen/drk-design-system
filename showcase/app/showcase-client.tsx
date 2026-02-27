@@ -1,9 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { PortableTextBlock } from '@portabletext/react'
 import Alert from '../../components/Alert/Alert'
-import BlockRenderer from '../../components/BlockRenderer/BlockRenderer'
 import Button from '../../components/Button/Button'
 import Checkbox from '../../components/Checkbox/Checkbox'
 import CookieBanner from '../../components/CookieBanner/CookieBanner'
@@ -12,14 +10,13 @@ import Footer from '../../components/Footer/Footer'
 import Header from '../../components/Header/Header'
 import Input from '../../components/Input/Input'
 import Label from '../../components/Label/Label'
-import LegalPage from '../../components/LegalPage/LegalPage'
 import Modal from '../../components/Modal/Modal'
 import Navigation from '../../components/Navigation/Navigation'
 import Radio from '../../components/Radio/Radio'
 import Select from '../../components/Select/Select'
 import Spinner from '../../components/Spinner/Spinner'
 import Textarea from '../../components/Textarea/Textarea'
-import type { SiteConfig } from '../../lib/site'
+import type { SiteConfig } from '../../lib/site-config'
 import styles from './showcase.module.scss'
 
 const demoSite: SiteConfig = {
@@ -45,44 +42,6 @@ const demoSite: SiteConfig = {
   ],
 }
 
-const legalContent: PortableTextBlock[] = [
-  {
-    _type: 'block',
-    style: 'normal',
-    _key: 'a1',
-    markDefs: [],
-    children: [
-      {
-        _type: 'span',
-        _key: 'a1-1',
-        text: 'Dies ist ein Beispieltext fuer die Darstellung von Rechtsseiten mit Portable Text.',
-        marks: [],
-      },
-    ],
-  },
-  {
-    _type: 'block',
-    style: 'h2',
-    _key: 'a2',
-    markDefs: [],
-    children: [{ _type: 'span', _key: 'a2-1', text: 'Verantwortlichkeit', marks: [] }],
-  },
-  {
-    _type: 'block',
-    style: 'normal',
-    _key: 'a3',
-    markDefs: [],
-    children: [
-      {
-        _type: 'span',
-        _key: 'a3-1',
-        text: 'Diese Komponente rendert strukturierte Rechtsinhalte aus Sanity.',
-        marks: [],
-      },
-    ],
-  },
-]
-
 export default function ShowcaseClient() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [radioValue, setRadioValue] = useState('email')
@@ -101,7 +60,7 @@ export default function ShowcaseClient() {
             <h1>DRK Design System Showcase</h1>
             <p>
               Diese Seite demonstriert alle zentralen Komponenten aus{' '}
-              <code>@drkaachen/design-system</code> inkl. kurzer Beschreibung und Live-Rendering.
+              <code>@drkaachen/design-system-ui</code> inkl. kurzer Beschreibung und Live-Rendering.
             </p>
           </section>
 
@@ -198,68 +157,6 @@ export default function ShowcaseClient() {
                 </Button>
               </div>
             </Modal>
-          </Section>
-
-          <Section
-            title="BlockRenderer"
-            description="Rendert CMS-Bloecke (Hero, Text+Bild, CTA, FAQ) mit den Standard-Styles."
-          >
-            <div className={styles.stack}>
-              <BlockRenderer
-                block={{
-                  _type: 'heroBlock',
-                  heading: 'Willkommen beim DRK Showcase',
-                  subheading: 'Komponenten koennen aus Sanity-Inhalten gespeist werden.',
-                  ctaText: 'Mehr erfahren',
-                  ctaLink: '/leistungen',
-                }}
-              />
-              <BlockRenderer
-                block={{
-                  _type: 'textImageBlock',
-                  heading: 'Text und Bild',
-                  text: '<p>Dieser Bereich zeigt, wie Rich-Text sicher dargestellt wird.</p>',
-                  imagePosition: 'right',
-                }}
-              />
-              <BlockRenderer
-                block={{
-                  _type: 'ctaSection',
-                  heading: 'Jetzt mitmachen',
-                  text: 'Unterstuetzen Sie unsere lokale Arbeit mit einer Spende.',
-                  ctaText: 'Jetzt spenden',
-                  ctaLink: 'https://www.drk.de',
-                }}
-              />
-              <BlockRenderer
-                block={{
-                  _type: 'faqBlock',
-                  heading: 'Haeufige Fragen',
-                  items: [
-                    {
-                      question: 'Wie schnell kann ich starten?',
-                      answer: '<p>Direkt nach Installation und Konfiguration.</p>',
-                    },
-                    {
-                      question: 'Ist das DSGVO-konform nutzbar?',
-                      answer:
-                        '<p>Ja, mit lokaler Font-Einbindung, Consent-Steuerung und sauberer Dokumentation.</p>',
-                    },
-                  ],
-                }}
-              />
-            </div>
-          </Section>
-
-          <Section
-            title="LegalPage"
-            description="Strukturierte Rechtsinhalte (Impressum, Datenschutz, AGB) aus Portable Text."
-          >
-            <LegalPage
-              title="Datenschutz (Beispiel)"
-              content={legalContent}
-              lastUpdated={new Date().toISOString()}
-            />
           </Section>
 
           <Section

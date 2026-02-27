@@ -1,0 +1,31 @@
+{
+  "name": "@drkaachen/content-sanity",
+  "version": "1.0.0",
+  "description": "Optional Sanity content adapter for DRK apps",
+  "homepage": "https://github.com/DRKAachen/drk-design-system/tree/main/packages/content-sanity",
+  "private": false,
+  "license": "UNLICENSED",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./lib/*": "./lib/*"
+  },
+  "files": ["lib", "index.ts", "README.md"],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "peerDependencies": {
+    "next": ">=14.0.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "dependencies": {
+    "@sanity/client": "^7.16.0",
+    "@sanity/image-url": "^2.0.3",
+    "next-sanity": "^12.0.0"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  }
+}
