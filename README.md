@@ -63,6 +63,8 @@ In your Next.js site project:
 npm install @drk/design-system
 ```
 
+The package is intended for private distribution via GitHub Packages inside DRK environments.
+
 For local development before publishing (e.g. from a sibling folder):
 
 ```json
@@ -84,6 +86,51 @@ cd showcase
 npm install
 npm run dev
 ```
+
+## Private Consumption (drk-app-template)
+
+You can configure private package consumption once in `drk-app-template` so all future apps created from it inherit the setup.
+
+### 1) Commit-safe `.npmrc` in the template repo
+
+Create `.npmrc` in `drk-app-template` with:
+
+```ini
+@drk:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
+always-auth=true
+```
+
+This file is safe to commit because it references an environment variable, not a hardcoded token.
+
+Template file available in this repository: `templates/npmrc.consuming-app.private`.
+
+### 2) CI setup once (recommended: org secret)
+
+Store a `NODE_AUTH_TOKEN` secret (with `read:packages`) in GitHub org/repo secrets and expose it in workflows:
+
+```yaml
+env:
+  NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+```
+
+### 3) Local developer onboarding (one-time per machine)
+
+Developers set a personal token once (never commit it):
+
+- PowerShell:
+
+```powershell
+[System.Environment]::SetEnvironmentVariable("NODE_AUTH_TOKEN", "ghp_xxx", "User")
+```
+
+- macOS/Linux shell profile:
+
+```bash
+export NODE_AUTH_TOKEN=ghp_xxx
+```
+
+After setting the token, restart the terminal and run `npm install`.
 
 ## Usage
 
@@ -202,6 +249,12 @@ This package follows semantic versioning (semver). When you publish a new versio
 
 Publishing is intentionally explicit: trigger the publish workflow manually (`workflow_dispatch`) or via a GitHub release. The workflow no longer auto-bumps versions on every push to `main`. Update `package.json` first, then publish.
 
+Private release prerequisites:
+
+- Publishing happens via `GITHUB_TOKEN` in GitHub Actions (package write permission required).
+- `package.json` version is updated intentionally.
+- CI (`typecheck`, tests, audit) is green.
+
 ## Security
 
 See `SECURITY.md` for vulnerability reporting and disclosure process.
@@ -259,8 +312,8 @@ updates:
 ```
 
 - Full example file in this repo: **`templates/dependabot.consuming-app.yml`** (copy to your app’s `.github/dependabot.yml`).
-- Dependabot will open PRs when it finds a newer version on the registry (e.g. GitHub Packages).
-- Ensure the app can resolve the package (e.g. `.npmrc` with `@drk:registry=https://npm.pkg.github.com` and auth if the package is private).
+- Dependabot will open PRs when it finds a newer version on GitHub Packages.
+- Ensure your consuming app can resolve the private package via `.npmrc` and a token.
 
 **Option 2: Renovate** (GitHub App: [renovateapp.com](https://www.renovate.com))
 

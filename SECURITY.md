@@ -13,7 +13,8 @@ Security updates are provided for the latest published major version of `@drk/de
 
 Please do **not** open public GitHub issues for security vulnerabilities.
 
-- Report by email to: `security@drk.example` (replace with your real security mailbox).
+- Report via GitHub Security Advisories (preferred): `https://github.com/DRKAachen/drk-design-system/security/advisories/new`
+- If advisory submission is not possible, open a minimal issue asking for a private contact channel (without sharing exploit details).
 - Include:
   - affected package version
   - clear reproduction steps or proof-of-concept
