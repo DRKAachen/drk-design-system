@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-Security updates are provided for the latest published major version of `@drk/design-system`.
+Security updates are provided for the latest published major version of `@drkaachen/design-system`.
 
 | Version | Supported |
 | --- | --- |

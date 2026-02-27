@@ -4,7 +4,7 @@
  * to pages and API routes via request headers.
  *
  * Consuming site: create middleware.ts at project root that re-exports this:
- *   import { middleware, config } from '@drk/design-system/middleware'
+ *   import { middleware, config } from '@drkaachen/design-system/middleware'
  *   export { middleware, config }
  */
 

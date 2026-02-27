@@ -1,4 +1,4 @@
-# @drk/design-system
+# @drkaachen/design-system
 
 Shared DRK (Deutsches Rotes Kreuz) design system, React components, SCSS tokens, and utilities for multi-site Next.js projects.
 
@@ -11,7 +11,7 @@ Shared DRK (Deutsches Rotes Kreuz) design system, React components, SCSS tokens,
 
 ## Components
 
-All components can be imported from `@drk/design-system` or via deep paths (e.g. `@drk/design-system/components/Button/Button`).
+All components can be imported from `@drkaachen/design-system` or via deep paths (e.g. `@drkaachen/design-system/components/Button/Button`).
 
 ### Layout & navigation
 
@@ -60,7 +60,7 @@ All components can be imported from `@drk/design-system` or via deep paths (e.g.
 In your Next.js site project:
 
 ```bash
-npm install @drk/design-system
+npm install @drkaachen/design-system
 ```
 
 The package is intended for private distribution via GitHub Packages inside DRK environments.
@@ -70,7 +70,7 @@ For local development before publishing (e.g. from a sibling folder):
 ```json
 {
   "dependencies": {
-    "@drk/design-system": "file:../drk-design-system"
+    "@drkaachen/design-system": "file:../drk-design-system"
   }
 }
 ```
@@ -96,7 +96,7 @@ You can configure private package consumption once in `drk-app-template` so all 
 Create `.npmrc` in `drk-app-template` with:
 
 ```ini
-@drk:registry=https://npm.pkg.github.com
+@drkaachen:registry=https://npm.pkg.github.com
 //npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
 always-auth=true
 ```
@@ -142,9 +142,9 @@ Ensure the design system is transpiled and SCSS can resolve its styles:
 // next.config.js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ['@drk/design-system'],
+  transpilePackages: ['@drkaachen/design-system'],
   sassOptions: {
-    includePaths: ['./node_modules/@drk/design-system/styles', './styles'],
+    includePaths: ['./node_modules/@drkaachen/design-system/styles', './styles'],
   },
   // ... images, etc.
 }
@@ -155,11 +155,11 @@ module.exports = nextConfig
 
 ```tsx
 // app/layout.tsx
-import { getSiteByHostname } from '@drk/design-system'
-import Header from '@drk/design-system/components/Header/Header'
-import Footer from '@drk/design-system/components/Footer/Footer'
-import CookieBanner from '@drk/design-system/components/CookieBanner/CookieBanner'
-import '@drk/design-system/styles/globals.scss'
+import { getSiteByHostname } from '@drkaachen/design-system'
+import Header from '@drkaachen/design-system/components/Header/Header'
+import Footer from '@drkaachen/design-system/components/Footer/Footer'
+import CookieBanner from '@drkaachen/design-system/components/CookieBanner/CookieBanner'
+import '@drkaachen/design-system/styles/globals.scss'
 
 export default async function RootLayout({ children }) {
   const headersList = await headers()
@@ -186,7 +186,7 @@ Create `middleware.ts` at your project root and re-export the design system midd
 
 ```ts
 // middleware.ts (at project root)
-export { middleware, config } from '@drk/design-system/middleware'
+export { middleware, config } from '@drkaachen/design-system/middleware'
 ```
 
 For hardened multi-domain setups behind a proxy/CDN, set `ALLOWED_SITE_HOSTNAMES` to an explicit comma-separated list. The middleware will normalize the incoming host and ignore hosts outside this allowlist.
@@ -196,10 +196,10 @@ For hardened multi-domain setups behind a proxy/CDN, set `ALLOWED_SITE_HOSTNAMES
 Import design tokens or globals as needed:
 
 ```scss
-@use '@drk/design-system/styles/variables' as *;
-@use '@drk/design-system/styles/mixins' as *;
+@use '@drkaachen/design-system/styles/variables' as *;
+@use '@drkaachen/design-system/styles/mixins' as *;
 // Or import the full globals in your root layout:
-// import '@drk/design-system/styles/globals.scss'
+// import '@drkaachen/design-system/styles/globals.scss'
 ```
 
 ### Form and feedback components
@@ -207,7 +207,7 @@ Import design tokens or globals as needed:
 Use the design system components for forms and feedback:
 
 ```tsx
-import { Label, Input, Button, Alert, Spinner, Modal } from '@drk/design-system'
+import { Label, Input, Button, Alert, Spinner, Modal } from '@drkaachen/design-system'
 
 // Form field with label and error
 <Label htmlFor="email" required error={errors.email}>E-Mail</Label>
@@ -263,7 +263,7 @@ See `SECURITY.md` for vulnerability reporting and disclosure process.
 
 **Do I need to do anything now? What’s the workflow?**
 
-- **Yes, one-time setup per app** (including **drk-app-template**): add the Dependabot config once (see below). After that, when you publish a new version of the design system, GitHub will open a PR in that repo to bump `@drk/design-system`. You review and merge; no manual version hunting.
+- **Yes, one-time setup per app** (including **drk-app-template**): add the Dependabot config once (see below). After that, when you publish a new version of the design system, GitHub will open a PR in that repo to bump `@drkaachen/design-system`. You review and merge; no manual version hunting.
 - **New projects** (e.g. from **drk-app-template**): put the Dependabot config **into drk-app-template**. Every app you create from that template will then get automatic PRs for design system updates. You don’t have to do anything per new project.
 - **Updating drk-app-template itself**: Add `.github/dependabot.yml` to drk-app-template (copy from this repo’s `templates/dependabot.consuming-app.yml`). When you release a new design system version, Dependabot will open a PR in drk-app-template to update the dependency; merge it and the template is updated. New apps you create from the template after that will start with the latest design system version.
 
@@ -273,11 +273,11 @@ See `SECURITY.md` for vulnerability reporting and disclosure process.
 
 1. In the app repo (e.g. `drk-app-template`), create `.github/dependabot.yml`.
 2. Copy the contents from this repo’s **`templates/dependabot.consuming-app.yml`** (or from the YAML block below).
-3. Commit and push. Dependabot will run on the schedule (e.g. weekly) and open a PR when a new `@drk/design-system` version exists.
+3. Commit and push. Dependabot will run on the schedule (e.g. weekly) and open a PR when a new `@drkaachen/design-system` version exists.
 
 ---
 
-Consuming apps can get automatic pull requests when a new version of `@drk/design-system` is published. Two common options:
+Consuming apps can get automatic pull requests when a new version of `@drkaachen/design-system` is published. Two common options:
 
 **Option 1: Dependabot** (built into GitHub)
 
@@ -285,7 +285,7 @@ Copy the example config from this repo into your consuming app:
 
 ```bash
 mkdir -p .github
-cp node_modules/@drk/design-system/templates/dependabot.consuming-app.yml .github/dependabot.yml
+cp node_modules/@drkaachen/design-system/templates/dependabot.consuming-app.yml .github/dependabot.yml
 ```
 
 Or create `.github/dependabot.yml` in the **consuming app’s repo** with:
@@ -294,7 +294,7 @@ Or create `.github/dependabot.yml` in the **consuming app’s repo** with:
 # .github/dependabot.yml (in your Next.js / consuming app repo)
 version: 2
 updates:
-  # npm dependencies (includes @drk/design-system)
+  # npm dependencies (includes @drkaachen/design-system)
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
@@ -305,7 +305,7 @@ updates:
     groups:
       design-system:
         patterns:
-          - "@drk/design-system*"
+          - "@drkaachen/design-system*"
         update-types:
           - "minor"
           - "patch"
@@ -326,7 +326,7 @@ In the **consuming app’s repo**, add a config file. Example `renovate.json` in
   "schedule": ["before 10am on monday"],
   "packageRules": [
     {
-      "matchPackagePatterns": ["^@drk/design-system"],
+      "matchPackagePatterns": ["^@drkaachen/design-system"],
       "groupName": "drk-design-system",
       "schedule": ["at any time"]
     }
@@ -334,13 +334,13 @@ In the **consuming app’s repo**, add a config file. Example `renovate.json` in
 }
 ```
 
-Or enable Renovate on the repo via GitHub; it will propose this (or a minimal) config. The rule above groups `@drk/design-system` updates into a single PR and can check “at any time” so you get PRs soon after you publish.
+Or enable Renovate on the repo via GitHub; it will propose this (or a minimal) config. The rule above groups `@drkaachen/design-system` updates into a single PR and can check “at any time” so you get PRs soon after you publish.
 
 **Summary**
 
 | Tool        | Config location              | What it does |
 |------------|-----------------------------|--------------|
-| Dependabot | `.github/dependabot.yml`    | Opens PRs when newer versions of npm deps (including `@drk/design-system`) exist. |
+| Dependabot | `.github/dependabot.yml`    | Opens PRs when newer versions of npm deps (including `@drkaachen/design-system`) exist. |
 | Renovate   | `renovate.json` or GitHub UI | Same idea; more options (grouping, scheduling, labels). |
 
 After you merge the PR in the consuming app, run `npm install` (or your CI does it) and the app will use the new design system version.

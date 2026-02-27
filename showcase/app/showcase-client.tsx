@@ -101,7 +101,7 @@ export default function ShowcaseClient() {
             <h1>DRK Design System Showcase</h1>
             <p>
               Diese Seite demonstriert alle zentralen Komponenten aus{' '}
-              <code>@drk/design-system</code> inkl. kurzer Beschreibung und Live-Rendering.
+              <code>@drkaachen/design-system</code> inkl. kurzer Beschreibung und Live-Rendering.
             </p>
           </section>
 

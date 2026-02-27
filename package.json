@@ -1,5 +1,5 @@
 {
-  "name": "@drk/design-system",
+  "name": "@drkaachen/design-system",
   "version": "1.0.0",
   "description": "DRK shared design system, components, and utilities for multi-site Next.js projects",
   "private": false,

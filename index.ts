@@ -1,8 +1,8 @@
 /**
- * @drk/design-system
+ * @drkaachen/design-system
  *
  * Re-exports for convenience. Consumers can also use deep imports, e.g.:
- *   import { getSiteByHostname } from '@drk/design-system/lib/site'
+ *   import { getSiteByHostname } from '@drkaachen/design-system/lib/site'
  */
 
 export { getSiteByHostname } from './lib/site'

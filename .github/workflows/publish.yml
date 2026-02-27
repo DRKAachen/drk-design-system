@@ -1,4 +1,4 @@
-# Publish @drk/design-system to GitHub Packages from an explicit trigger.
+# Publish @drkaachen/design-system to GitHub Packages from an explicit trigger.
 # Version bumps are done intentionally in git before triggering this workflow.
 name: Publish to GitHub Packages
 
@@ -28,7 +28,7 @@ jobs:
           node-version: '24'
           cache: 'npm'
           registry-url: 'https://npm.pkg.github.com'
-          scope: '@drk'
+          scope: '@drkaachen'
 
       - name: Install dependencies
         run: npm ci

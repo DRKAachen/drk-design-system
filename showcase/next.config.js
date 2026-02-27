@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ['@drk/design-system'],
+  transpilePackages: ['@drkaachen/design-system'],
   sassOptions: {
-    includePaths: ['./node_modules/@drk/design-system/styles', './app'],
+    includePaths: ['./node_modules/@drkaachen/design-system/styles', './app'],
   },
 }
 

@@ -2,7 +2,7 @@
  * Reusable SCSS mixins for common patterns.
  * Uses full package path for variables so resolution works when consumed by apps.
  */
-@use '@drk/design-system/styles/variables' as variables;
+@use '@drkaachen/design-system/styles/variables' as variables;
 
 @mixin respond-to($breakpoint) {
   @if $breakpoint == sm {
