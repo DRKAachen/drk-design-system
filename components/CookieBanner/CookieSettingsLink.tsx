@@ -2,10 +2,12 @@
 
 /**
  * Link to reopen cookie settings (GDPR/DSGVO: user must be able to change consent).
+ *
+ * Dispatches a custom event that CookieBanner listens for, so the banner
+ * reopens with current preferences pre-filled instead of clearing consent.
  */
 
-import { CONSENT_STORAGE_KEY } from '../../lib/cookies/consent'
-import { CONSENT_COOKIE_KEY } from '../../lib/cookies/consent'
+import { REOPEN_CONSENT_EVENT } from './CookieBanner'
 import styles from './CookieBanner.module.scss'
 
 interface CookieSettingsLinkProps {
@@ -14,22 +16,16 @@ interface CookieSettingsLinkProps {
 }
 
 /**
- * Renders a link/button that clears cookie consent and reloads to show the banner again.
+ * Renders a button that reopens the CookieBanner with current preferences.
  */
 export default function CookieSettingsLink({
   className,
   children = 'Cookie-Einstellungen',
 }: CookieSettingsLinkProps) {
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = (e: React.MouseEvent): void => {
     e.preventDefault()
     if (typeof window === 'undefined') return
-    try {
-      window.localStorage.removeItem(CONSENT_STORAGE_KEY)
-      document.cookie = `${CONSENT_COOKIE_KEY}=; Path=/; Max-Age=0; SameSite=Lax`
-      window.location.reload()
-    } catch {
-      window.location.reload()
-    }
+    window.dispatchEvent(new Event(REOPEN_CONSENT_EVENT))
   }
 
   return (

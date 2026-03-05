@@ -32,7 +32,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: variables.$font-family-heading;
   font-weight: variables.$font-weight-bold;
   line-height: variables.$line-height-tight;
-  color: variables.$drk-rot;
+  color: variables.$color-text-accent;
 }
 
 h1 { font-size: variables.$font-size-4xl; }
@@ -51,6 +51,7 @@ a {
   text-decoration: none;
   font-weight: variables.$font-weight-bold;
   transition: color variables.$transition-fast;
+  @include mixins.reduced-motion;
 
   &:hover {
     color: color.adjust(variables.$drk-dunkelblau, $lightness: -10%);
@@ -58,6 +59,36 @@ a {
 
   &:focus-visible {
     @include mixins.focus-outline;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    color: variables.$dark-text-primary;
+    background-color: variables.$dark-background;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: variables.$drk-rot;
+  }
+
+  a {
+    color: variables.$dark-link;
+
+    &:hover {
+      color: variables.$dark-link-hover;
+    }
   }
 }
 

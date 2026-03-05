@@ -78,3 +78,21 @@ export async function getUiSite(hostname: string): Promise<UiSiteConfig | null> 
 - Store secrets and tokens in environment variables only.
 - Validate all hostnames and request inputs before using them in fetch parameters.
 - Keep CMS integration optional to reduce GDPR/DSGVO risk surface for apps that do not need external content services.
+
+## Data Privacy & DSGVO
+
+Using this package means your application makes API requests to Sanity.io servers to fetch content. This has several DSGVO (Datenschutz-Grundverordnung) implications:
+
+- **IP address transmission:** Every Sanity API/CDN request transmits the visitor's IP address to Sanity servers. This constitutes personal data processing under DSGVO.
+- **Data Processing Agreement (DPA):** A Auftragsverarbeitungsvertrag (AVV / DPA) with Sanity.io must be in place before processing any visitor data through their services.
+- **International data transfer:** Sanity.io is a US-based service. Standard Contractual Clauses (SCCs) for international data transfer must be executed to comply with DSGVO Chapter V requirements.
+- **Privacy policy disclosure:** Your site's privacy policy (Datenschutzerklärung) must mention Sanity.io as a data processor, the categories of data processed, and the legal basis for the transfer.
+- **Public datasets:** Sanity public datasets are readable by anyone with the project ID. Never store personal data (e.g. user submissions, contact details) in public datasets.
+- **Client-exposed env vars:** All `NEXT_PUBLIC_` environment variables are embedded in the client-side JavaScript bundle by design. `NEXT_PUBLIC_SANITY_PROJECT_ID` and `NEXT_PUBLIC_SANITY_DATASET` will be visible to end users.
+- **CDN routing:** When `useCdn: true` is set (the default for production), content requests are routed through Sanity's CDN, which is likely US-hosted. Consider this when evaluating data residency requirements.
+
+## Security
+
+- **`NEXT_PUBLIC_SANITY_PROJECT_ID` is intentionally public.** It is required on the client to fetch content and only grants read access to public datasets. This is safe as long as public datasets contain only published content data.
+- **Never store sensitive or personal data in public Sanity datasets.** Use private datasets with token-based access for any data that should not be publicly accessible.
+- **Configure Sanity Studio access controls properly.** Restrict editor/admin roles to authorized personnel. Enable two-factor authentication for Sanity accounts. Review the project's CORS origins and API token permissions regularly.

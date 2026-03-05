@@ -30,12 +30,17 @@ $color-primary: $drk-rot;
 $color-secondary: $drk-dunkelblau;
 $color-accent: $drk-hellblau;
 
+// WCAG AA compliant accent for small text (~5.2:1 on white vs $drk-rot at ~4.0:1)
+$drk-rot-text: #c20004;
+$drk-grau-text: #595959;              // Gray safe for small text (~7.0:1)
+
 $color-text-primary: $drk-schwarz;
-$color-text-secondary: $drk-grau;
+$color-text-secondary: $drk-grau-text;
 $color-text: $color-text-primary;
-$color-text-muted: $color-text-secondary;
+$color-text-muted: $drk-grau;
 $color-text-light: color.adjust($drk-grau, $lightness: 20%);
 $color-text-on-dark: $drk-weiss;
+$color-text-accent: $drk-rot-text;
 
 $color-background: $drk-weiss;
 $color-background-light: $drk-hellblau;
@@ -44,9 +49,21 @@ $color-background-dark: $drk-dunkelblau;
 $color-border: #e0e0e0;
 $color-border-dark: #cccccc;
 
-$color-error: $drk-rot;
+$color-error: $drk-rot-text;
 $color-success: #28a745;
 $color-warning: #ffc107;
+
+// =============================================================================
+// DARK MODE TOKENS
+// =============================================================================
+$dark-background: #121212;
+$dark-background-elevated: #1e1e1e;
+$dark-background-surface: #2c2c2c;
+$dark-text-primary: #f0f0f0;
+$dark-text-secondary: #b0b0b0;
+$dark-border: #3a3a3a;
+$dark-link: #7cb8f0;
+$dark-link-hover: #a6d0f7;
 
 $color-link: $drk-dunkelblau;
 $color-link-hover: color.adjust($drk-dunkelblau, $lightness: -10%);

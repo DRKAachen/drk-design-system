@@ -14,9 +14,10 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 /**
  * Accessible text input. Pair with Label for full form semantics.
+ * Pass aria-describedby to link to error/hint IDs from Label.
  */
 const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
-  { error, fullWidth, className, ...props },
+  { error, fullWidth, className, 'aria-describedby': ariaDescribedBy, ...props },
   ref
 ) {
   return (
@@ -30,10 +31,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       ]
         .filter(Boolean)
         .join(' ')}
-      aria-invalid={error}
+      aria-invalid={error || undefined}
+      aria-describedby={ariaDescribedBy || undefined}
       {...props}
     />
   )
 })
+
+Input.displayName = 'Input'
 
 export default Input

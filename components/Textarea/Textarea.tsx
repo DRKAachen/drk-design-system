@@ -14,9 +14,10 @@ export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElemen
 
 /**
  * Accessible multi-line text input. Pair with Label for full form semantics.
+ * Pass aria-describedby to link to error/hint IDs from Label.
  */
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
-  { error, fullWidth, className, ...props },
+  { error, fullWidth, className, 'aria-describedby': ariaDescribedBy, ...props },
   ref
 ) {
   return (
@@ -30,10 +31,13 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function Textare
       ]
         .filter(Boolean)
         .join(' ')}
-      aria-invalid={error}
+      aria-invalid={error || undefined}
+      aria-describedby={ariaDescribedBy || undefined}
       {...props}
     />
   )
 })
+
+Textarea.displayName = 'Textarea'
 
 export default Textarea

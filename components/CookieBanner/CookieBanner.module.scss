@@ -127,7 +127,25 @@
     background-color: rgba($drk-weiss, 0.08);
     border: 1px solid rgba($drk-weiss, 0.3);
     border-radius: $radius-sm;
-    padding: $spacing-md;
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height $transition-base, opacity $transition-fast, padding $transition-base;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &--open {
+      max-height: 20rem;
+      opacity: 1;
+      padding: $spacing-md;
+    }
+  }
+
+  &__prefActions {
+    margin-top: $spacing-sm;
   }
 
   &__fieldset {

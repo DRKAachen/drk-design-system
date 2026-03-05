@@ -40,8 +40,8 @@ export default function Footer({ site }: FooterProps) {
       <div className={styles.footer__inner}>
         <nav className={styles.footer__nav} aria-label="Footer navigation">
           <ul className={styles.footer__links}>
-            {links.map((link, index) => (
-              <li key={`${link.href}-${index}`} className={styles.footer__linkItem}>
+            {links.map((link) => (
+              <li key={link.href} className={styles.footer__linkItem}>
                 <Link href={link.href} className={styles.footer__link}>
                   {link.label}
                 </Link>

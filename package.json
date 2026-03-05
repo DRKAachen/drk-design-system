@@ -2,6 +2,7 @@
   "name": "@drkaachen/design-system-ui",
   "version": "1.0.1",
   "description": "DRK shared UI design system for Next.js projects",
+  "type": "module",
   "private": false,
   "license": "MIT",
   "main": "./index.ts",
@@ -45,19 +46,47 @@
     "sanitize-html": "^2.17.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^25.3.3",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@types/sanitize-html": "^2.16.0",
+    "eslint": "^9.39.0",
+    "eslint-config-prettier": "^10.1.0",
+    "eslint-plugin-jsx-a11y": "^6.10.0",
+    "eslint-plugin-react": "^7.37.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "husky": "^9.1.0",
+    "jsdom": "^26.0.0",
+    "lint-staged": "^16.0.0",
+    "prettier": "^3.0.0",
     "sass": "^1.77.0",
     "typescript": "^5.6.0",
+    "typescript-eslint": "^8.56.1",
     "vitest": "^4.0.18"
   },
   "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
     "typecheck:workspaces": "npm run typecheck --workspaces --if-present",
     "test": "vitest run",
-    "test:workspaces": "npm run test --workspaces --if-present"
+    "test:workspaces": "npm run test --workspaces --if-present",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{scss,css,json,yml,yaml}": [
+      "prettier --write"
+    ]
   },
   "engines": {
     "node": ">=20.0.0"

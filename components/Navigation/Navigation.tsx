@@ -7,6 +7,7 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { SiteConfig } from '../../lib/site-config'
+import { lockBodyScroll, unlockBodyScroll } from '../../lib/scroll-lock'
 import styles from './Navigation.module.scss'
 
 interface NavigationProps {
@@ -17,6 +18,7 @@ export default function Navigation({ site }: NavigationProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [openSubmenuIndex, setOpenSubmenuIndex] = useState<number | null>(null)
   const submenuTriggerRefs = useRef<Array<HTMLButtonElement | null>>([])
+  const navRef = useRef<HTMLElement | null>(null)
 
   const toggleMobileMenu = useCallback(() => {
     setIsMobileMenuOpen((prev) => !prev)
@@ -34,19 +36,46 @@ export default function Navigation({ site }: NavigationProps) {
     return () => document.removeEventListener('keydown', handleEscape)
   }, [])
 
+  /** iOS-safe scroll lock when mobile menu is open. */
   useEffect(() => {
     if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden'
+      lockBodyScroll()
     } else {
-      document.body.style.overflow = ''
+      unlockBodyScroll()
     }
-
     return () => {
-      document.body.style.overflow = ''
+      unlockBodyScroll()
     }
   }, [isMobileMenuOpen])
 
-  const focusSubmenuItem = (index: number, to: 'first' | 'last') => {
+  /** Close open submenus when focus leaves the nav entirely (A11). */
+  useEffect(() => {
+    if (openSubmenuIndex === null) return
+
+    const handleFocusOut = (event: FocusEvent) => {
+      if (!navRef.current) return
+      const relatedTarget = event.relatedTarget as Node | null
+      if (relatedTarget && !navRef.current.contains(relatedTarget)) {
+        setOpenSubmenuIndex(null)
+      }
+    }
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!navRef.current) return
+      if (!navRef.current.contains(event.target as Node)) {
+        setOpenSubmenuIndex(null)
+      }
+    }
+
+    document.addEventListener('focusin', handleFocusOut)
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('focusin', handleFocusOut)
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [openSubmenuIndex])
+
+  const focusSubmenuItem = (index: number, to: 'first' | 'last'): void => {
     const submenu = document.getElementById(getSubmenuId(index))
     if (!submenu) return
     const links = submenu.querySelectorAll<HTMLAnchorElement>('a[href]')
@@ -62,7 +91,7 @@ export default function Navigation({ site }: NavigationProps) {
     event: React.KeyboardEvent,
     index: number,
     hasChildren: boolean
-  ) => {
+  ): void => {
     if (!hasChildren) return
 
     if (event.key === 'Enter' || event.key === ' ') {
@@ -89,21 +118,21 @@ export default function Navigation({ site }: NavigationProps) {
     }
   }
 
-  const handleSubmenuItemKeyDown = (event: React.KeyboardEvent, index: number) => {
+  const handleSubmenuItemKeyDown = (event: React.KeyboardEvent, index: number): void => {
     if (event.key !== 'Escape') return
     event.preventDefault()
     setOpenSubmenuIndex(null)
     submenuTriggerRefs.current[index]?.focus()
   }
 
-  const getSubmenuId = (index: number) => `navigation-submenu-${index}`
+  const getSubmenuId = (index: number): string => `navigation-submenu-${index}`
 
   if (!site.navigation || site.navigation.length === 0) {
     return null
   }
 
   return (
-    <nav className={styles.navigation} role="navigation" aria-label="Hauptnavigation">
+    <nav ref={navRef} className={styles.navigation} aria-label="Hauptnavigation">
       <button
         type="button"
         className={styles.navigation__toggle}
@@ -137,7 +166,7 @@ export default function Navigation({ site }: NavigationProps) {
 
           return (
             <li
-              key={index}
+              key={item.href || item.label}
               className={`${styles.navigation__item} ${isSubmenuOpen ? styles['navigation__item--open'] : ''}`}
               onMouseEnter={() => hasChildren && setOpenSubmenuIndex(index)}
               onMouseLeave={() => hasChildren && setOpenSubmenuIndex(null)}
@@ -185,8 +214,8 @@ export default function Navigation({ site }: NavigationProps) {
                       {item.label} Übersicht
                     </a>
                   </li>
-                  {item.children!.map((child, childIndex) => (
-                    <li key={childIndex} className={styles['navigation__submenu-item']}>
+                  {item.children!.map((child) => (
+                    <li key={child.href} className={styles['navigation__submenu-item']}>
                       <a
                         href={child.href}
                         className={styles['navigation__submenu-link']}

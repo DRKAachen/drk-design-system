@@ -7,8 +7,10 @@
 export type { SiteConfig } from './lib/site-config'
 export * from './lib/cookies/consent'
 export { sanitizeHtml } from './lib/sanitize'
+export { lockBodyScroll, unlockBodyScroll } from './lib/scroll-lock'
+export { securityHeaders, applySecurityHeaders } from './lib/security-headers'
+export type { SecurityHeaderOptions } from './lib/security-headers'
 
-// Components (use these from main entry to avoid deep path resolution issues)
 export { default as Header } from './components/Header/Header'
 export { default as Footer } from './components/Footer/Footer'
 export { default as Navigation } from './components/Navigation/Navigation'

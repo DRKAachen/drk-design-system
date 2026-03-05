@@ -92,3 +92,25 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/**
+ * Disables transitions and animations when the user prefers reduced motion.
+ * Apply inside selectors that declare transition or animation.
+ */
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/**
+ * Locks body scrolling on all platforms including iOS Safari.
+ * Use with lockBodyScroll() / unlockBodyScroll() JS helpers.
+ */
+@mixin scroll-lock {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}

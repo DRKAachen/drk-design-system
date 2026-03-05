@@ -2,13 +2,15 @@
 
 /**
  * Cookie banner for GDPR/DSGVO compliance.
- * Shown until the user makes a choice; stores consent in localStorage.
+ * Shown until the user makes a choice; re-openable via CookieSettingsLink
+ * without losing existing preferences (D8/A6).
  */
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import {
   type CookieConsent,
+  type CookieCategory,
   getStoredConsent,
   setStoredConsent,
   shouldShowBanner,
@@ -17,10 +19,35 @@ import {
 } from '../../lib/cookies/consent'
 import styles from './CookieBanner.module.scss'
 
+/** Custom event name dispatched by CookieSettingsLink to reopen the banner. */
+export const REOPEN_CONSENT_EVENT = 'drk-reopen-consent'
+
+export interface CategoryDescription {
+  category: Exclude<CookieCategory, 'necessary'>
+  label: string
+}
+
+export interface CookieBannerProps {
+  /**
+   * Optional per-category descriptions for the preferences panel.
+   * When not provided, sensible German defaults are used.
+   */
+  categoryDescriptions?: CategoryDescription[]
+}
+
+const DEFAULT_CATEGORIES: CategoryDescription[] = [
+  { category: 'functional', label: 'Funktional (z.\u00a0B. Komfortfunktionen)' },
+  { category: 'analytics', label: 'Analytics (anonyme Nutzungsstatistik)' },
+  { category: 'marketing', label: 'Marketing (externe Kampagnenmessung)' },
+]
+
 /**
- * Renders the cookie consent banner when no consent has been stored.
+ * Renders the cookie consent banner when no consent has been stored,
+ * or when the user requests to change their settings.
  */
-export default function CookieBanner() {
+export default function CookieBanner({
+  categoryDescriptions = DEFAULT_CATEGORIES,
+}: CookieBannerProps) {
   const [visible, setVisible] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [showPreferences, setShowPreferences] = useState(false)
@@ -30,6 +57,16 @@ export default function CookieBanner() {
     marketing: false,
   })
 
+  /** Loads current stored consent into the preferences state. */
+  const syncPreferencesFromStorage = useCallback(() => {
+    const stored = getStoredConsent()
+    setPreferences({
+      functional: stored.functional,
+      analytics: stored.analytics,
+      marketing: stored.marketing,
+    })
+  }, [])
+
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 0)
     return () => clearTimeout(t)
@@ -38,26 +75,35 @@ export default function CookieBanner() {
   useEffect(() => {
     if (!mounted) return
     const t = setTimeout(() => setVisible(shouldShowBanner()), 0)
-    const stored = getStoredConsent()
-    setPreferences({
-      functional: stored.functional,
-      analytics: stored.analytics,
-      marketing: stored.marketing,
-    })
+    syncPreferencesFromStorage()
     return () => clearTimeout(t)
-  }, [mounted])
+  }, [mounted, syncPreferencesFromStorage])
 
-  const handleAcceptAll = () => {
+  /** Listen for CookieSettingsLink dispatching the reopen event. */
+  useEffect(() => {
+    const handleReopen = () => {
+      syncPreferencesFromStorage()
+      setShowPreferences(true)
+      setVisible(true)
+    }
+
+    window.addEventListener(REOPEN_CONSENT_EVENT, handleReopen)
+    return () => window.removeEventListener(REOPEN_CONSENT_EVENT, handleReopen)
+  }, [syncPreferencesFromStorage])
+
+  const handleAcceptAll = (): void => {
     setStoredConsent(getAllConsent())
     setVisible(false)
+    setShowPreferences(false)
   }
 
-  const handleNecessaryOnly = () => {
+  const handleNecessaryOnly = (): void => {
     setStoredConsent(getNecessaryOnlyConsent())
     setVisible(false)
+    setShowPreferences(false)
   }
 
-  const handleSavePreferences = () => {
+  const handleSavePreferences = (): void => {
     const savedConsent: CookieConsent = {
       choiceMade: true,
       timestamp: Date.now(),
@@ -69,6 +115,7 @@ export default function CookieBanner() {
     }
     setStoredConsent(savedConsent)
     setVisible(false)
+    setShowPreferences(false)
   }
 
   if (!mounted || !visible) {
@@ -81,16 +128,21 @@ export default function CookieBanner() {
       role="dialog"
       aria-label="Cookie-Einstellungen"
       aria-live="polite"
+      lang="de"
     >
       <div className={styles.banner__inner}>
         <div className={styles.banner__content}>
           <h2 className={styles.banner__heading}>Cookie-Hinweis</h2>
           <p className={styles.banner__text}>
-            Wir verwenden Cookies und ähnliche Technologien, um die Nutzung der Website zu
-            ermöglichen und zu verbessern. Notwendige Cookies sind für den Betrieb erforderlich.
-            Weitere Informationen finden Sie in unserer{' '}
+            Wir verwenden Cookies und ähnliche Technologien (z.&nbsp;B. localStorage), um die
+            Nutzung der Website zu ermöglichen und zu verbessern. Notwendige Cookies sind für
+            den Betrieb erforderlich. Weitere Informationen finden Sie in unserer{' '}
             <Link href="/datenschutz" className={styles.banner__link}>
               Datenschutzerklärung
+            </Link>{' '}
+            und im{' '}
+            <Link href="/impressum" className={styles.banner__link}>
+              Impressum
             </Link>
             .
           </p>
@@ -121,54 +173,39 @@ export default function CookieBanner() {
           >
             {showPreferences ? 'Auswahl schließen' : 'Auswahl anpassen'}
           </button>
-          {showPreferences && (
-            <button
-              type="button"
-              className={styles.banner__btnSecondary}
-              onClick={handleSavePreferences}
-            >
-              Auswahl speichern
-            </button>
-          )}
         </div>
       </div>
-      {showPreferences && (
-        <div id="cookie-preferences" className={styles.banner__preferences}>
-          <fieldset className={styles.banner__fieldset}>
-            <legend className={styles.banner__legend}>Optionale Cookies</legend>
-            <label className={styles.banner__choice}>
+
+      <div
+        id="cookie-preferences"
+        className={`${styles.banner__preferences} ${showPreferences ? styles['banner__preferences--open'] : ''}`}
+        aria-hidden={!showPreferences}
+      >
+        <fieldset className={styles.banner__fieldset}>
+          <legend className={styles.banner__legend}>Optionale Cookies</legend>
+          {categoryDescriptions.map(({ category, label }) => (
+            <label key={category} className={styles.banner__choice}>
               <input
                 type="checkbox"
-                checked={preferences.functional}
+                checked={preferences[category]}
                 onChange={(event) =>
-                  setPreferences((prev) => ({ ...prev, functional: event.target.checked }))
+                  setPreferences((prev) => ({ ...prev, [category]: event.target.checked }))
                 }
               />
-              <span>Funktional (z. B. Komfortfunktionen)</span>
+              <span>{label}</span>
             </label>
-            <label className={styles.banner__choice}>
-              <input
-                type="checkbox"
-                checked={preferences.analytics}
-                onChange={(event) =>
-                  setPreferences((prev) => ({ ...prev, analytics: event.target.checked }))
-                }
-              />
-              <span>Analytics (anonyme Nutzungsstatistik)</span>
-            </label>
-            <label className={styles.banner__choice}>
-              <input
-                type="checkbox"
-                checked={preferences.marketing}
-                onChange={(event) =>
-                  setPreferences((prev) => ({ ...prev, marketing: event.target.checked }))
-                }
-              />
-              <span>Marketing (externe Kampagnenmessung)</span>
-            </label>
-          </fieldset>
+          ))}
+        </fieldset>
+        <div className={styles.banner__prefActions}>
+          <button
+            type="button"
+            className={styles.banner__btnSecondary}
+            onClick={handleSavePreferences}
+          >
+            Auswahl speichern
+          </button>
         </div>
-      )}
+      </div>
     </aside>
   )
 }

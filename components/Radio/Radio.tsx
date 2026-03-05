@@ -33,7 +33,7 @@ const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
     <div
       className={[styles.radioWrap, error && styles.radioWrapError, className].filter(Boolean).join(' ')}
       role="radiogroup"
-      aria-invalid={error}
+      aria-invalid={error || undefined}
       aria-describedby={hint ? `${groupId}-hint` : undefined}
     >
       {options.map((opt, index) => {
@@ -66,5 +66,7 @@ const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
     </div>
   )
 })
+
+Radio.displayName = 'Radio'
 
 export default Radio

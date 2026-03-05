@@ -30,7 +30,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Checkbox(
         type="checkbox"
         id={id}
         className={styles.checkbox}
-        aria-invalid={error}
+        aria-invalid={error || undefined}
         aria-describedby={hint ? `${id}-hint` : undefined}
         {...props}
       />
@@ -45,5 +45,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Checkbox(
     </div>
   )
 })
+
+Checkbox.displayName = 'Checkbox'
 
 export default Checkbox

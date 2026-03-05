@@ -2,9 +2,11 @@
 
 /**
  * Modal (Dialog) component - accessible overlay dialog with backdrop and optional close.
+ * Uses iOS-safe scroll locking.
  */
 
 import { useEffect, useRef, useId } from 'react'
+import { lockBodyScroll, unlockBodyScroll } from '../../lib/scroll-lock'
 import styles from './Modal.module.scss'
 
 export interface ModalProps {
@@ -88,19 +90,21 @@ export default function Modal({
     }
   }, [open, onClose])
 
+  /** iOS-safe body scroll lock. */
   useEffect(() => {
     if (open) {
-      document.body.style.overflow = 'hidden'
+      lockBodyScroll()
     } else {
-      document.body.style.overflow = ''
+      unlockBodyScroll()
     }
     return () => {
-      document.body.style.overflow = ''
+      unlockBodyScroll()
     }
   }, [open])
 
   if (!open) return null
 
+  /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions -- Backdrop/content click handlers are supplemental; Escape key is the keyboard equivalent */
   return (
     <div
       className={styles.backdrop}

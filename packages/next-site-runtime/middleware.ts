@@ -3,6 +3,10 @@
  * Resolves site configuration from the request hostname and makes it available
  * to pages and API routes via request headers.
  *
+ * SECURITY: This middleware trusts x-forwarded-host only when
+ * TRUST_PROXY=true is set. Consuming apps behind a reverse proxy must
+ * set this env var AND configure the proxy to overwrite x-forwarded-host.
+ *
  * Consuming site: create middleware.ts at project root that re-exports this:
  *   import { middleware, config } from '@drkaachen/next-site-runtime/middleware'
  *   export { middleware, config }
@@ -12,9 +16,11 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { getSiteByHostname } from '@drkaachen/content-sanity'
 
-export async function middleware(request: NextRequest) {
-  const forwardedHost = request.headers.get('x-forwarded-host')
-  const hostname = normalizeHostname(forwardedHost || request.headers.get('host') || '')
+const SITE_HEADER_ID = 'x-site-id'
+const SITE_HEADER_HOSTNAME = 'x-site-hostname'
+
+export async function middleware(request: NextRequest): Promise<NextResponse> {
+  const hostname = resolveHostname(request)
   const pathname = request.nextUrl.pathname
 
   if (
@@ -26,7 +32,9 @@ export async function middleware(request: NextRequest) {
   }
 
   if (!isAllowedHostname(hostname)) {
-    console.warn(`Blocked request with non-allowed hostname: ${hostname}`)
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(`[Middleware] Blocked request with non-allowed hostname: ${hostname}`)
+    }
     return NextResponse.next()
   }
 
@@ -39,13 +47,19 @@ export async function middleware(request: NextRequest) {
   const site = await getSiteByHostname(hostname)
 
   if (!site) {
-    console.warn(`No site configuration found for hostname: ${hostname}`)
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(`[Middleware] No site configuration found for hostname: ${hostname}`)
+    }
     return NextResponse.next()
   }
 
   const requestHeaders = new Headers(request.headers)
-  requestHeaders.set('x-site-id', site._id)
-  requestHeaders.set('x-site-hostname', site.hostname)
+
+  // Overwrite site headers to prevent spoofing from incoming requests (S4)
+  requestHeaders.delete(SITE_HEADER_ID)
+  requestHeaders.delete(SITE_HEADER_HOSTNAME)
+  requestHeaders.set(SITE_HEADER_ID, site._id)
+  requestHeaders.set(SITE_HEADER_HOSTNAME, site.hostname)
 
   return NextResponse.next({
     request: {
@@ -57,6 +71,19 @@ export async function middleware(request: NextRequest) {
 /** Next.js middleware matcher: run on all paths except static and API. */
 export const config = {
   matcher: ['/((?!_next|api|sanity).*)'],
+}
+
+/**
+ * Resolves the effective hostname from the request.
+ * Only trusts x-forwarded-host when TRUST_PROXY env var is explicitly "true".
+ */
+function resolveHostname(request: NextRequest): string {
+  const trustProxy = process.env.TRUST_PROXY === 'true'
+  if (trustProxy) {
+    const forwarded = request.headers.get('x-forwarded-host')
+    if (forwarded) return normalizeHostname(forwarded)
+  }
+  return normalizeHostname(request.headers.get('host') || '')
 }
 
 function normalizeHostname(hostname: string): string {

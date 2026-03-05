@@ -1,11 +1,16 @@
 /**
  * Cookie consent handling for GDPR/DSGVO compliance.
+ *
+ * Provides storage, retrieval, enforcement checking, and lifecycle hooks
+ * for cookie consent. Consuming apps should use `hasConsent()` to gate
+ * any tracking or non-essential functionality behind user consent.
  */
 
 export const CONSENT_STORAGE_KEY = 'drk_cookie_consent'
 export const CONSENT_COOKIE_KEY = 'drk_cookie_consent_v1'
 const CONSENT_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365
 const CONSENT_RETENTION_MS = CONSENT_COOKIE_MAX_AGE_SECONDS * 1000
+const MAX_COOKIE_SIZE_BYTES = 4096
 
 export type CookieCategory = 'necessary' | 'functional' | 'analytics' | 'marketing'
 
@@ -19,6 +24,14 @@ export interface CookieConsent {
   marketing: boolean
 }
 
+/**
+ * Callback signature for consent change events.
+ * Apps can use this to send consent to a server-side audit log (DSGVO Art. 7(1)).
+ */
+export type ConsentChangeCallback = (consent: CookieConsent) => void
+
+let consentChangeListeners: ConsentChangeCallback[] = []
+
 export const DEFAULT_CONSENT: CookieConsent = {
   choiceMade: false,
   timestamp: 0,
@@ -27,6 +40,51 @@ export const DEFAULT_CONSENT: CookieConsent = {
   functional: false,
   analytics: false,
   marketing: false,
+}
+
+/**
+ * Registers a listener called whenever consent is stored or cleared.
+ * Use this to forward consent events to a server-side audit log.
+ * Returns an unsubscribe function.
+ */
+export function onConsentChange(callback: ConsentChangeCallback): () => void {
+  consentChangeListeners.push(callback)
+  return () => {
+    consentChangeListeners = consentChangeListeners.filter((cb) => cb !== callback)
+  }
+}
+
+/** Notifies all registered consent listeners. */
+function notifyListeners(consent: CookieConsent): void {
+  for (const listener of consentChangeListeners) {
+    try {
+      listener(consent)
+    } catch {
+      // Listener errors must not break consent flow
+    }
+  }
+}
+
+/**
+ * Checks whether a specific cookie category has been consented to.
+ * `necessary` always returns true. For all other categories, returns
+ * true only when the user has actively given consent.
+ *
+ * Use this to gate analytics, marketing, or functional scripts:
+ *   if (hasConsent('analytics')) { initAnalytics() }
+ */
+export function hasConsent(category: CookieCategory): boolean {
+  if (category === 'necessary') return true
+  const stored = getStoredConsent()
+  if (!stored.choiceMade) return false
+  return stored[category] === true
+}
+
+/**
+ * Checks whether consent has been granted for all of the given categories.
+ */
+export function hasAllConsent(categories: CookieCategory[]): boolean {
+  return categories.every((cat) => hasConsent(cat))
 }
 
 export function getAllConsent(): CookieConsent {
@@ -80,9 +138,10 @@ export function setStoredConsent(consent: CookieConsent): CookieConsent {
     const serializedConsent = JSON.stringify(consent)
     window.localStorage.setItem(CONSENT_STORAGE_KEY, serializedConsent)
     setConsentCookie(serializedConsent)
-  } catch (e) {
-    console.warn('[CookieConsent] Could not save consent to localStorage:', e)
+  } catch {
+    // Silent fallback: consent is best-effort in constrained environments
   }
+  notifyListeners(consent)
   return consent
 }
 
@@ -106,11 +165,49 @@ export function getStoredConsentFromCookieHeader(cookieHeader: string | null): C
     .find((part) => part.startsWith(cookieName))
   if (!entry) return { ...DEFAULT_CONSENT }
   const raw = entry.slice(cookieName.length)
+  if (raw.length > MAX_COOKIE_SIZE_BYTES) return { ...DEFAULT_CONSENT }
   return parseConsentOrDefault(raw)
+}
+
+/**
+ * Removes all stored consent data (localStorage + cookie).
+ * Use for DSGVO Art. 17 (Recht auf Löschung / right to erasure) flows.
+ */
+export function clearConsentData(): void {
+  if (typeof window === 'undefined') return
+  try {
+    window.localStorage.removeItem(CONSENT_STORAGE_KEY)
+  } catch {
+    // localStorage may be unavailable
+  }
+  if (typeof document !== 'undefined') {
+    document.cookie = `${CONSENT_COOKIE_KEY}=; Path=/; Max-Age=0; SameSite=Lax`
+  }
+  notifyListeners({ ...DEFAULT_CONSENT })
+}
+
+/**
+ * Returns consent data in a portable JSON format.
+ * Use for DSGVO Art. 20 (Recht auf Datenübertragbarkeit / data portability).
+ */
+export function getConsentDataForExport(): {
+  consent: CookieConsent
+  storageKeys: { localStorage: string; cookie: string }
+  exportedAt: string
+} {
+  return {
+    consent: getStoredConsent(),
+    storageKeys: {
+      localStorage: CONSENT_STORAGE_KEY,
+      cookie: CONSENT_COOKIE_KEY,
+    },
+    exportedAt: new Date().toISOString(),
+  }
 }
 
 function parseConsentOrDefault(raw: string): CookieConsent {
   try {
+    if (raw.length > MAX_COOKIE_SIZE_BYTES) return { ...DEFAULT_CONSENT }
     const decoded = decodeURIComponent(raw)
     const parsed = JSON.parse(decoded) as Partial<CookieConsent>
     if (!parsed || typeof parsed.choiceMade !== 'boolean') {

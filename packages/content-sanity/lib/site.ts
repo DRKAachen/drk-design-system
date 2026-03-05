@@ -10,7 +10,7 @@ export interface SiteConfig {
   _id: string
   name: string
   hostname: string
-  logo?: any
+  logo?: { _type: string; asset: { _ref: string; _type: string } }
   primaryColor?: string
   secondaryColor?: string
   defaultLocale: string

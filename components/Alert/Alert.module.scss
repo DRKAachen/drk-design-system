@@ -7,9 +7,17 @@
 @use '../../styles/mixins' as *;
 
 .alert {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-sm;
   padding: $spacing-md $spacing-lg;
   border-radius: $radius-sm;
   border-left: 4px solid;
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+  }
 
   &__title {
     margin: 0 0 $spacing-xs 0;
@@ -23,6 +31,35 @@
     font-size: $font-size-sm;
     line-height: $line-height-relaxed;
     margin: 0;
+  }
+
+  &__dismiss {
+    @include button-reset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 1.75rem;
+    height: 1.75rem;
+    font-size: 1.25rem;
+    line-height: 1;
+    border-radius: $radius-sm;
+    color: inherit;
+    opacity: 0.7;
+    transition: opacity $transition-fast, background-color $transition-fast;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &:hover {
+      opacity: 1;
+      background-color: rgba(0, 0, 0, 0.08);
+    }
+
+    &:focus-visible {
+      @include focus-outline;
+    }
   }
 
   &--success {

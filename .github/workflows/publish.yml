@@ -15,6 +15,7 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    environment: npm-publish
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -30,6 +31,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      - name: Lint
+        run: npm run lint
 
       - name: Type check root package
         run: npm run typecheck

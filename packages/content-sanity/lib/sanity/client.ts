@@ -10,7 +10,7 @@ const sanityProjectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'drk-placeh
 const sanityDataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
 const sanityApiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-01-01'
 
-if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID && process.env.NODE_ENV !== 'production') {
+if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID && process.env.NODE_ENV === 'development') {
   console.warn(
     '[Sanity] NEXT_PUBLIC_SANITY_PROJECT_ID is not set. Using placeholder projectId for local rendering.'
   )

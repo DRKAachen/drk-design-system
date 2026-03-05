@@ -72,7 +72,7 @@
   &__title {
     font-family: variables.$font-family-heading;
     font-weight: variables.$font-weight-bold;
-    color: variables.$drk-rot;
+    color: variables.$color-text-accent;
     margin-bottom: variables.$spacing-2xl;
   }
 
@@ -173,7 +173,7 @@
 
   &__heading {
     margin-bottom: variables.$spacing-lg;
-    color: variables.$drk-rot;
+    color: variables.$color-text-accent;
 
     .block--hero & {
       font-size: variables.$font-size-4xl;
@@ -304,7 +304,7 @@
     font-family: variables.$font-family-heading;
     font-size: variables.$font-size-lg;
     font-weight: variables.$font-weight-bold;
-    color: variables.$drk-rot;
+    color: variables.$color-text-accent;
   }
 
   &__answer {
