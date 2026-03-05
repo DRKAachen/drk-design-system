@@ -2,6 +2,10 @@
   "name": "@drkaachen/next-site-runtime",
   "version": "1.0.0",
   "description": "Optional Next.js site runtime helpers for DRK apps",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DRKAachen/drk-design-system"
+  },
   "homepage": "https://github.com/DRKAachen/drk-design-system/tree/main/packages/next-site-runtime",
   "private": false,
   "license": "MIT",

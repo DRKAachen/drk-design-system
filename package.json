@@ -26,7 +26,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DRKAachen/drk-design-system.git"
+    "url": "https://github.com/DRKAachen/drk-design-system"
   },
   "homepage": "https://github.com/DRKAachen/drk-design-system#readme",
   "bugs": {
