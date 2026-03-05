@@ -1,6 +1,6 @@
 {
   "name": "@drkaachen/next-site-runtime",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Optional Next.js site runtime helpers for DRK apps",
   "repository": {
     "type": "git",
@@ -16,7 +16,12 @@
     "./middleware": "./middleware.ts",
     "./lib/*": "./lib/*"
   },
-  "files": ["lib", "index.ts", "middleware.ts", "README.md"],
+  "files": [
+    "lib",
+    "index.ts",
+    "middleware.ts",
+    "README.md"
+  ],
   "publishConfig": {
     "access": "public"
   },

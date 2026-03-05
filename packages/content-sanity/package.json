@@ -1,6 +1,6 @@
 {
   "name": "@drkaachen/content-sanity",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Optional Sanity content adapter for DRK apps",
   "repository": {
     "type": "git",
@@ -15,7 +15,11 @@
     ".": "./index.ts",
     "./lib/*": "./lib/*"
   },
-  "files": ["lib", "index.ts", "README.md"],
+  "files": [
+    "lib",
+    "index.ts",
+    "README.md"
+  ],
   "publishConfig": {
     "access": "public"
   },

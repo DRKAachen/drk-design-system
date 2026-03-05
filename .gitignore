@@ -23,4 +23,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Audit files (local-only, do not commit)
+AUDIT_*.md
+
 # Optional: keep .env.example committed for documentation

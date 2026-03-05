@@ -1,6 +1,6 @@
 {
   "name": "@drkaachen/design-system-ui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "DRK shared UI design system for Next.js projects",
   "private": false,
   "license": "MIT",
