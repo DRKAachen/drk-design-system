@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "DRK shared UI design system for Next.js projects",
   "private": false,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "main": "./index.ts",
   "types": "./index.ts",
   "exports": {
@@ -34,7 +34,7 @@
     "url": "https://github.com/DRKAachen/drk-design-system/issues"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "peerDependencies": {
     "next": ">=14.0.0",

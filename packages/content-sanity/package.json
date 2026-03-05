@@ -4,7 +4,7 @@
   "description": "Optional Sanity content adapter for DRK apps",
   "homepage": "https://github.com/DRKAachen/drk-design-system/tree/main/packages/content-sanity",
   "private": false,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "main": "./index.ts",
   "types": "./index.ts",
   "exports": {
@@ -13,7 +13,7 @@
   },
   "files": ["lib", "index.ts", "README.md"],
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "peerDependencies": {
     "next": ">=14.0.0",

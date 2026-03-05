@@ -136,17 +136,16 @@ For `drk-app-template`:
 - Provide an optional documented module/feature toggle for Sanity setup
 - Only add Sanity env vars and middleware in apps that explicitly enable Sanity
 
-## Private Registry Setup
+## Public Registry Setup
 
-Use `.npmrc` in consuming apps:
+Packages are published publicly to npm. Consuming apps can install without extra registry auth:
 
-```ini
-@drkaachen:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
-always-auth=true
+```bash
+npm install @drkaachen/design-system-ui
 ```
 
-Template file is available at `templates/npmrc.consuming-app.private`.
+Optional internal mirror setup (if you later switch to private hosting) is documented in
+`templates/npmrc.consuming-app.private`.
 
 ## Automated Updates in Consuming Apps
 
@@ -181,6 +180,18 @@ Run showcase:
 cd showcase
 npm run dev
 ```
+
+## Publishing
+
+Publishing runs via GitHub Actions (`.github/workflows/publish.yml`) and pushes to npm.
+
+Requirements before first release:
+
+- Create an npm organization/user that owns the `@drkaachen` scope.
+- Add `NPM_TOKEN` as a repository secret (token with publish rights for that scope).
+- Bump package versions intentionally before triggering release.
+
+Then trigger the publish workflow manually or via GitHub Release.
 
 ## Fonts and GDPR/DSGVO
 

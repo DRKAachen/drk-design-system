@@ -2,8 +2,8 @@
 # to get automatic PRs when new versions of DRK frontend packages are published.
 #
 # Prerequisites:
-# - Your app can resolve @drkaachen/design-system-ui (e.g. .npmrc with
-#   @drkaachen:registry=https://npm.pkg.github.com and auth for private packages).
+# - Your app can resolve @drkaachen/design-system-ui from npm.
+# - If you use a private mirror later, configure .npmrc accordingly.
 #
 # See README "Automated updates in consuming apps" for details.
 
