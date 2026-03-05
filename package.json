@@ -22,8 +22,7 @@
     "templates"
   ],
   "workspaces": [
-    "packages/*",
-    "showcase"
+    "packages/*"
   ],
   "repository": {
     "type": "git",
