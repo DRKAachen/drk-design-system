@@ -2,7 +2,7 @@
  * GROQ queries for fetching content from Sanity.
  */
 
-import { groq } from 'next-sanity'
+import groq from 'groq'
 
 export const siteByHostnameQuery = groq`
   *[_type == "site" && hostname == $hostname][0] {
