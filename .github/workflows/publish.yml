@@ -1,5 +1,6 @@
 # Publish DRK packages to npm from an explicit trigger.
 # Version bumps are done intentionally in git before triggering this workflow.
+# Each publish step tolerates "already published" errors so partial re-runs succeed.
 name: Publish to npm
 
 on:
@@ -48,16 +49,40 @@ jobs:
         run: npm audit --omit=dev --audit-level=high
 
       - name: Publish UI package
-        run: npm publish --provenance
+        run: |
+          OUTPUT=$(npm publish --provenance 2>&1) && echo "$OUTPUT" || {
+            if echo "$OUTPUT" | grep -q "cannot publish over the previously published"; then
+              echo "::warning::@drkaachen/design-system-ui version already published — skipping"
+            else
+              echo "$OUTPUT" >&2
+              exit 1
+            fi
+          }
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish content-sanity package
-        run: npm publish -w @drkaachen/content-sanity --provenance
+        run: |
+          OUTPUT=$(npm publish -w @drkaachen/content-sanity --provenance 2>&1) && echo "$OUTPUT" || {
+            if echo "$OUTPUT" | grep -q "cannot publish over the previously published"; then
+              echo "::warning::@drkaachen/content-sanity version already published — skipping"
+            else
+              echo "$OUTPUT" >&2
+              exit 1
+            fi
+          }
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish next-site-runtime package
-        run: npm publish -w @drkaachen/next-site-runtime --provenance
+        run: |
+          OUTPUT=$(npm publish -w @drkaachen/next-site-runtime --provenance 2>&1) && echo "$OUTPUT" || {
+            if echo "$OUTPUT" | grep -q "cannot publish over the previously published"; then
+              echo "::warning::@drkaachen/next-site-runtime version already published — skipping"
+            else
+              echo "$OUTPUT" >&2
+              exit 1
+            fi
+          }
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
