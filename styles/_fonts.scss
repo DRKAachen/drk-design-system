@@ -1,7 +1,21 @@
 /**
- * Self-hosted font declarations - GDPR/DSGVO compliant.
- * Merriweather files are bundled via @fontsource/merriweather.
+ * Self-hosted font declarations — GDPR/DSGVO compliant.
+ * All font files are bundled locally via @fontsource packages.
+ * No external CDN requests are made at runtime.
+ *
+ * DRK Styleguide body font chain:
+ *   Helvetica Neue (system, macOS/iOS) → Open Sans (self-hosted) → Arial → sans-serif
+ * See: https://styleguide.drk.de/deutsches-rotes-kreuz/digital/webseite
  */
+
+// Open Sans — DRK-approved free alternative closest to Helvetica Neue.
+// Weights: Light (300), Regular (400), Medium (500), Bold (700)
+@import '@fontsource/open-sans/latin-300.css';
+@import '@fontsource/open-sans/latin-400.css';
+@import '@fontsource/open-sans/latin-500.css';
+@import '@fontsource/open-sans/latin-700.css';
+
+// Merriweather — heading font
 @import '@fontsource/merriweather/latin-300.css';
 @import '@fontsource/merriweather/latin-300-italic.css';
 @import '@fontsource/merriweather/latin-400.css';

@@ -283,11 +283,24 @@ Then trigger the publish workflow manually or via GitHub Release.
 
 ## Fonts and GDPR/DSGVO
 
-Merriweather is self-hosted via `@fontsource/merriweather` inside `@drkaachen/design-system-ui`.
+All fonts are self-hosted via `@fontsource` packages — no external CDN requests at runtime.
 
+| Font | Purpose | Weights | Source |
+|------|---------|---------|--------|
+| Open Sans | Body text, UI elements | 300, 400, 500, 700 | `@fontsource/open-sans` |
+| Merriweather | Headings | 300, 400, 700 | `@fontsource/merriweather` |
+
+The body font stack follows the [DRK Styleguide](https://styleguide.drk.de/deutsches-rotes-kreuz/digital/webseite):
+
+```
+'Helvetica Neue', 'Open Sans', Helvetica, Arial, sans-serif
+```
+
+- **macOS/iOS users** get Helvetica Neue (pre-installed system font)
+- **All other users** get Open Sans (self-hosted, free, closest visual match to Helvetica Neue per DRK styleguide)
+- Helvetica Neue is a commercial font (Monotype). It is referenced as a system font only — no licensed font files are bundled.
 - No per-project font file copy is required.
-- Do not load fonts from external CDNs by default.
-- Font files are bundled with the package and served locally by the consuming app build.
+- Do not load fonts from external CDNs.
 
 ### Cookie Inventory (for Datenschutzerklärung)
 
