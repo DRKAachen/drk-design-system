@@ -1,6 +1,6 @@
 {
   "name": "@drkaachen/content-sanity",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Optional Sanity content adapter for DRK apps",
   "repository": {
     "type": "git",
