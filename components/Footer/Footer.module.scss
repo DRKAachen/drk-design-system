@@ -1,12 +1,18 @@
 /**
  * Footer component styles - DRK Corporate Design
+ * Dark navy footer with legal navigation and copyright.
  */
 
+@use 'sass:color';
 @use '../../styles/variables' as *;
 @use '../../styles/mixins' as *;
 
 .footer {
-  background-color: $drk-dunkelblau;
+  background: linear-gradient(
+    180deg,
+    $drk-dunkelblau 0%,
+    color.adjust($drk-dunkelblau, $lightness: -4%) 100%
+  );
   color: $drk-weiss;
   padding: $spacing-2xl 0;
   margin-top: auto;
@@ -53,14 +59,15 @@
   }
 
   &__link {
-    color: $drk-weiss;
+    color: rgba($drk-weiss, 0.9);
     text-decoration: none;
     font-family: $font-family-base;
     font-weight: $font-weight-medium;
+    font-size: $font-size-sm;
     transition: color $transition-fast;
 
     &:hover {
-      color: $drk-hellblau;
+      color: $drk-weiss;
     }
 
     &:focus-visible {
@@ -77,12 +84,13 @@
     cursor: pointer;
     font-family: $font-family-base;
     font-weight: $font-weight-medium;
-    color: $drk-weiss;
+    font-size: $font-size-sm;
+    color: rgba($drk-weiss, 0.9);
     text-decoration: none;
     transition: color $transition-fast;
 
     &:hover {
-      color: $drk-hellblau;
+      color: $drk-weiss;
     }
 
     &:focus-visible {
@@ -93,7 +101,7 @@
   &__copyright {
     font-family: $font-family-base;
     font-size: $font-size-sm;
-    color: rgba($drk-weiss, 0.8);
+    color: rgba($drk-weiss, 0.65);
 
     p {
       margin: 0;

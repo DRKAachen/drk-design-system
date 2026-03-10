@@ -35,14 +35,16 @@ export default function Label({
     <label
       id={id}
       className={[styles.label, error && styles.labelError, className].filter(Boolean).join(' ')}
-      aria-required={required}
-      aria-invalid={!!error}
-      aria-describedby={[errorId, hintId].filter(Boolean).join(' ') || undefined}
       {...props}
     >
       <span className={styles.label__text}>
         {children}
-        {required && <span className={styles.label__required} aria-hidden="true"> *</span>}
+        {required && (
+          <span className={styles.label__required} aria-hidden="true">
+            {' '}
+            *
+          </span>
+        )}
       </span>
       {hint && (
         <span id={hintId} className={styles.label__hint}>

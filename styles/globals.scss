@@ -3,7 +3,7 @@
  * Based on: https://styleguide.drk.de
  */
 
-@use "sass:color";
+@use 'sass:color';
 @use 'variables';
 @use 'fonts';
 @use 'mixins';
@@ -20,13 +20,17 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: variables.$spacing-xs;
   padding: variables.$spacing-sm variables.$spacing-lg;
   font-family: variables.$font-family-base;
   font-weight: variables.$font-weight-bold;
   font-size: variables.$font-size-base;
-  border-radius: variables.$radius-sm;
-  transition: background-color variables.$transition-fast, color variables.$transition-fast,
-    border-color variables.$transition-fast;
+  border-radius: variables.$radius-md;
+  transition:
+    background-color variables.$transition-fast,
+    color variables.$transition-fast,
+    border-color variables.$transition-fast,
+    box-shadow variables.$transition-fast;
 
   &:focus-visible {
     @include mixins.focus-outline;
@@ -35,20 +39,24 @@
   &--primary {
     background-color: variables.$drk-rot;
     color: variables.$drk-weiss;
+    box-shadow: 0 1px 2px rgba(variables.$drk-rot, 0.2);
 
     &:hover {
-      background-color: color.adjust(variables.$drk-rot, $lightness: -10%);
+      background-color: color.adjust(variables.$drk-rot, $lightness: -8%);
       color: variables.$drk-weiss;
+      box-shadow: 0 2px 6px rgba(variables.$drk-rot, 0.3);
     }
   }
 
   &--secondary {
     background-color: variables.$drk-dunkelblau;
     color: variables.$drk-weiss;
+    box-shadow: 0 1px 2px rgba(variables.$drk-dunkelblau, 0.2);
 
     &:hover {
-      background-color: color.adjust(variables.$drk-dunkelblau, $lightness: -10%);
+      background-color: color.adjust(variables.$drk-dunkelblau, $lightness: -6%);
       color: variables.$drk-weiss;
+      box-shadow: 0 2px 6px rgba(variables.$drk-dunkelblau, 0.3);
     }
   }
 
@@ -60,6 +68,7 @@
     &:hover {
       background-color: variables.$drk-rot;
       color: variables.$drk-weiss;
+      box-shadow: 0 2px 6px rgba(variables.$drk-rot, 0.25);
     }
   }
 }
@@ -90,7 +99,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 400px;
+    min-height: 25rem;
     aspect-ratio: 21 / 9;
     padding: variables.$spacing-3xl 0;
     background-color: variables.$drk-hellblau;
@@ -298,6 +307,7 @@
   padding: variables.$spacing-xl;
   background-color: variables.$drk-hellblau;
   border-left: 4px solid variables.$drk-rot;
+  border-radius: variables.$radius-md;
 
   &__question {
     margin-bottom: variables.$spacing-md;
@@ -325,7 +335,7 @@
     font-family: variables.$font-family-heading;
     font-size: variables.$font-size-xl;
     font-weight: variables.$font-weight-bold;
-    color: variables.$drk-dunkelblau;
+    color: variables.$drk-rot;
     margin-top: variables.$spacing-xl;
     margin-bottom: variables.$spacing-sm;
   }

@@ -11,6 +11,7 @@ export { lockBodyScroll, unlockBodyScroll } from './lib/scroll-lock'
 export { securityHeaders, applySecurityHeaders } from './lib/security-headers'
 export type { SecurityHeaderOptions } from './lib/security-headers'
 
+export { default as DrkLogo } from './components/DrkLogo/DrkLogo'
 export { default as Header } from './components/Header/Header'
 export { default as Footer } from './components/Footer/Footer'
 export { default as Navigation } from './components/Navigation/Navigation'

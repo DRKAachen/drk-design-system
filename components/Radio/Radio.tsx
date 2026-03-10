@@ -18,21 +18,26 @@ export interface RadioProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   error?: boolean
   /** Optional hint below the group. */
   hint?: string
+  /** Accessible name for the radio group (announced by screen readers). */
+  groupLabel?: string
 }
 
 /**
  * Accessible radio group. All options share the same name for correct grouping.
  */
 const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
-  { options, error, hint, id: idProp, className, name, value: selectedValue, ...props },
+  { options, error, hint, id: idProp, className, name, value: selectedValue, groupLabel, ...props },
   ref
 ) {
   const generatedId = useId()
   const groupId = idProp || `radio-${name || generatedId}`
   return (
     <div
-      className={[styles.radioWrap, error && styles.radioWrapError, className].filter(Boolean).join(' ')}
+      className={[styles.radioWrap, error && styles.radioWrapError, className]
+        .filter(Boolean)
+        .join(' ')}
       role="radiogroup"
+      aria-label={groupLabel}
       aria-invalid={error || undefined}
       aria-describedby={hint ? `${groupId}-hint` : undefined}
     >

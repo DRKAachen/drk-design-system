@@ -82,9 +82,11 @@
     font-weight: $font-weight-bold;
     font-size: $font-size-sm;
     padding: $spacing-sm $spacing-md;
-    border-radius: $radius-sm;
+    border-radius: $radius-md;
     cursor: pointer;
-    transition: background-color $transition-fast, color $transition-fast;
+    transition:
+      background-color $transition-fast,
+      color $transition-fast;
 
     &:focus-visible {
       @include focus-outline-light;
@@ -126,12 +128,15 @@
     margin-top: $spacing-md;
     background-color: rgba($drk-weiss, 0.08);
     border: 1px solid rgba($drk-weiss, 0.3);
-    border-radius: $radius-sm;
+    border-radius: $radius-md;
     padding: 0;
     max-height: 0;
     overflow: hidden;
     opacity: 0;
-    transition: max-height $transition-base, opacity $transition-fast, padding $transition-base;
+    transition:
+      max-height $transition-base,
+      opacity $transition-fast,
+      padding $transition-base;
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -170,6 +175,10 @@
 
     input {
       accent-color: $drk-rot;
+
+      &:focus-visible {
+        @include focus-outline-light;
+      }
     }
   }
 }

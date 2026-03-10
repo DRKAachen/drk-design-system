@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-03-10
+
+### Added
+
+- `DrkLogo` component: renders the official DRK circular emblem (red cross with "DEUTSCHES ROTES KREUZ" text)
+- Official DRK logo shipped as `assets/drk-logo.png` for consuming apps to place in their public directory
+- Header now renders the DRK emblem alongside the site name when no custom `logoUrl` is provided
+- New shadow tokens `$shadow-card` and `$shadow-card-hover` for modern card-based layouts
+- New `$radius-2xl` token (1.25rem) for larger rounded corners
+- Alert `titleAs` prop for semantic heading levels (h2–h6) to improve screen-reader heading navigation
+- Radio `groupLabel` prop for accessible radio group naming
+- Spinner `aria-hidden` prop to prevent double announcements when used inside labeled buttons
+- CookieBanner focus trap: keyboard users cannot Tab away without making a consent choice (DSGVO/TTDSG)
+
+### Changed
+
+- Heading colors changed to brand red (`$drk-rot` #e60005) — WCAG AA compliant for large text (>=18pt, 3:1 ratio). For small body text needing red, use `$drk-rot-text` (#c20004) instead
+- Modernized design tokens: increased default border-radius (`$radius-sm` from 0.25rem to 0.375rem), refined shadow scale for softer, more contemporary elevations
+- Button styles: added subtle box-shadow for depth, active press feedback, smooth hover transitions, increased border-radius to `$radius-md`
+- Form inputs (Input, Textarea, Select): reduced border to 1.5px, increased border-radius to `$radius-md`
+- Alert and Modal: increased border-radius for consistency with updated design tokens
+- Footer: subtle gradient background, refined link styling
+- CookieBanner: `aria-modal="true"` and focus trap for DSGVO-compliant consent flow; buttons and preferences panel use `$radius-md`
+- Header: upgraded shadow from `$shadow-sm` to `$shadow-md`, site name uses `$drk-dunkelblau` for brand consistency
+- Showcase: redesigned with dark navy hero section, card-based section layout with hover shadows, light background
+
+### Fixed
+
+- Corrected German Umlaute throughout the showcase: "Menues" → "Menüs", "fuer" → "für", "Zugaengliche" → "Zugängliche", "waehlen" → "wählen", "pruefen" → "prüfen", "gross" → "groß", "oeffnen" → "öffnen", "Schliessen" → "Schließen", "Auswahlmoeglichkeiten" → "Auswahlmöglichkeiten", "spaeterem" → "späterem"
+- Removed incorrect `aria-required`, `aria-invalid`, `aria-describedby` from `<label>` element (they belong on the input)
+- Removed redundant `role="document"` from Modal inner element
+
 ## [1.1.2] - 2026-03-06
 
 ### Added
@@ -71,6 +103,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial public release.
 
+[1.2.0]: https://github.com/DRKAachen/drk-design-system/compare/v1.1.2...v1.2.0
 [1.1.2]: https://github.com/DRKAachen/drk-design-system/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/DRKAachen/drk-design-system/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/DRKAachen/drk-design-system/compare/v1.0.1...v1.1.0

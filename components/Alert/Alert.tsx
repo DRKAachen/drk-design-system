@@ -12,6 +12,12 @@ export interface AlertProps {
   variant?: AlertVariant
   /** Alert heading (optional). */
   title?: string
+  /**
+   * HTML element for the title. Defaults to 'strong'.
+   * Use a heading level (h2–h6) when alerts appear in page flow for
+   * screen-reader heading navigation.
+   */
+  titleAs?: 'strong' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p'
   /** Alert body. */
   children: React.ReactNode
   /** Optional class name. */
@@ -29,6 +35,7 @@ export interface AlertProps {
 export default function Alert({
   variant = 'info',
   title,
+  titleAs: TitleTag = 'strong',
   children,
   className,
   role = variant === 'error' ? 'alert' : 'status',
@@ -41,7 +48,7 @@ export default function Alert({
       aria-live={variant === 'error' ? 'assertive' : 'polite'}
     >
       <div className={styles.alert__body}>
-        {title && <p className={styles.alert__title}>{title}</p>}
+        {title && <TitleTag className={styles.alert__title}>{title}</TitleTag>}
         <div className={styles.alert__content}>{children}</div>
       </div>
       {onDismiss && (

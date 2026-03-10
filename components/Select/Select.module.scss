@@ -16,15 +16,17 @@
   line-height: $line-height-normal;
   color: $color-text-primary;
   background-color: $color-background;
-  border: 2px solid $color-border;
-  border-radius: $radius-sm;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-md;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23000' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right $spacing-md center;
-  transition: border-color $transition-fast, box-shadow $transition-fast;
+  transition:
+    border-color $transition-fast,
+    box-shadow $transition-fast;
 
-  &:focus {
+  &:focus-visible {
     outline: none;
     border-color: $drk-rot;
     box-shadow: 0 0 0 3px rgba($drk-rot, 0.2);
@@ -39,7 +41,7 @@
   &Error {
     border-color: $color-error;
 
-    &:focus {
+    &:focus-visible {
       border-color: $color-error;
       box-shadow: 0 0 0 3px rgba($color-error, 0.2);
     }

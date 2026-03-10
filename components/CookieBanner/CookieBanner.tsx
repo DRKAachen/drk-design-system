@@ -6,7 +6,7 @@
  * without losing existing preferences (D8/A6).
  */
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import {
   type CookieConsent,
@@ -35,6 +35,10 @@ export interface CookieBannerProps {
   categoryDescriptions?: CategoryDescription[]
 }
 
+/** Selector for elements that can receive focus inside the banner. */
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+
 const DEFAULT_CATEGORIES: CategoryDescription[] = [
   { category: 'functional', label: 'Funktional (z.\u00a0B. Komfortfunktionen)' },
   { category: 'analytics', label: 'Analytics (anonyme Nutzungsstatistik)' },
@@ -44,6 +48,7 @@ const DEFAULT_CATEGORIES: CategoryDescription[] = [
 /**
  * Renders the cookie consent banner when no consent has been stored,
  * or when the user requests to change their settings.
+ * Implements a focus trap so keyboard users cannot leave without choosing.
  */
 export default function CookieBanner({
   categoryDescriptions = DEFAULT_CATEGORIES,
@@ -56,6 +61,9 @@ export default function CookieBanner({
     analytics: false,
     marketing: false,
   })
+
+  const bannerRef = useRef<HTMLElement | null>(null)
+  const previousFocusRef = useRef<HTMLElement | null>(null)
 
   /** Loads current stored consent into the preferences state. */
   const syncPreferencesFromStorage = useCallback(() => {
@@ -91,6 +99,64 @@ export default function CookieBanner({
     return () => window.removeEventListener(REOPEN_CONSENT_EVENT, handleReopen)
   }, [syncPreferencesFromStorage])
 
+  /**
+   * Focus trap and Escape handler — active while the banner is visible.
+   * Moves focus into the banner on open, traps Tab, and collapses
+   * the preferences panel on Escape (banner cannot be fully dismissed
+   * without an explicit consent choice per DSGVO/TTDSG).
+   */
+  useEffect(() => {
+    if (!visible) return
+
+    previousFocusRef.current = document.activeElement as HTMLElement | null
+
+    requestAnimationFrame(() => {
+      const focusables = Array.from(
+        bannerRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR) || []
+      )
+      if (focusables.length > 0) {
+        focusables[0].focus()
+      } else {
+        bannerRef.current?.focus()
+      }
+    })
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        if (showPreferences) setShowPreferences(false)
+        return
+      }
+
+      if (event.key !== 'Tab' || !bannerRef.current) return
+
+      const focusables = Array.from(
+        bannerRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
+      )
+      if (focusables.length === 0) {
+        event.preventDefault()
+        return
+      }
+
+      const first = focusables[0]
+      const last = focusables[focusables.length - 1]
+      const active = document.activeElement as HTMLElement | null
+
+      if (event.shiftKey && active === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault()
+        first.focus()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+      previousFocusRef.current?.focus()
+    }
+  }, [visible, showPreferences])
+
   const handleAcceptAll = (): void => {
     setStoredConsent(getAllConsent())
     setVisible(false)
@@ -124,19 +190,21 @@ export default function CookieBanner({
 
   return (
     <aside
+      ref={bannerRef}
       className={styles.banner}
       role="dialog"
+      aria-modal="true"
       aria-label="Cookie-Einstellungen"
-      aria-live="polite"
       lang="de"
+      tabIndex={-1}
     >
       <div className={styles.banner__inner}>
         <div className={styles.banner__content}>
           <h2 className={styles.banner__heading}>Cookie-Hinweis</h2>
           <p className={styles.banner__text}>
             Wir verwenden Cookies und ähnliche Technologien (z.&nbsp;B. localStorage), um die
-            Nutzung der Website zu ermöglichen und zu verbessern. Notwendige Cookies sind für
-            den Betrieb erforderlich. Weitere Informationen finden Sie in unserer{' '}
+            Nutzung der Website zu ermöglichen und zu verbessern. Notwendige Cookies sind für den
+            Betrieb erforderlich. Weitere Informationen finden Sie in unserer{' '}
             <Link href="/datenschutz" className={styles.banner__link}>
               Datenschutzerklärung
             </Link>{' '}
@@ -178,7 +246,9 @@ export default function CookieBanner({
 
       <div
         id="cookie-preferences"
-        className={`${styles.banner__preferences} ${showPreferences ? styles['banner__preferences--open'] : ''}`}
+        className={`${styles.banner__preferences} ${
+          showPreferences ? styles['banner__preferences--open'] : ''
+        }`}
         aria-hidden={!showPreferences}
       >
         <fieldset className={styles.banner__fieldset}>

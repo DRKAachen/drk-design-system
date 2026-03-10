@@ -113,11 +113,11 @@ export default function Modal({
       aria-modal="true"
       aria-labelledby={titleId}
     >
+      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
       <div
         ref={modalRef}
         className={[styles.modal, className].filter(Boolean).join(' ')}
         onClick={(e) => e.stopPropagation()}
-        role="document"
         tabIndex={-1}
       >
         <div className={styles.modal__header}>

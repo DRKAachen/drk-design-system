@@ -9,23 +9,25 @@
   display: block;
   width: 100%;
   max-width: 100%;
-  min-height: 120px;
+  min-height: 7.5rem;
   padding: $spacing-sm $spacing-md;
   font-family: $font-family-base;
   font-size: $font-size-base;
   line-height: $line-height-normal;
   color: $color-text-primary;
   background-color: $color-background;
-  border: 2px solid $color-border;
-  border-radius: $radius-sm;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-md;
   resize: vertical;
-  transition: border-color $transition-fast, box-shadow $transition-fast;
+  transition:
+    border-color $transition-fast,
+    box-shadow $transition-fast;
 
   &::placeholder {
     color: $color-text-muted;
   }
 
-  &:focus {
+  &:focus-visible {
     outline: none;
     border-color: $drk-rot;
     box-shadow: 0 0 0 3px rgba($drk-rot, 0.2);
@@ -40,7 +42,7 @@
   &Error {
     border-color: $color-error;
 
-    &:focus {
+    &:focus-visible {
       border-color: $color-error;
       box-shadow: 0 0 0 3px rgba($color-error, 0.2);
     }

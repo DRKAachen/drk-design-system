@@ -22,13 +22,25 @@
 }
 
 .checkbox {
+  position: relative;
   width: 1.25rem;
   height: 1.25rem;
   margin: 0;
-  margin-top: 2px;
+  margin-top: 0.125rem;
   flex-shrink: 0;
   accent-color: $drk-rot;
   cursor: pointer;
+
+  // Invisible extended hit area to meet WCAG 2.2 SC 2.5.8 (44×44px)
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 44px;
+    min-height: 44px;
+  }
 
   &:focus-visible {
     @include focus-outline;

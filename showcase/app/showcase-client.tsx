@@ -21,7 +21,7 @@ import styles from './showcase.module.scss'
 
 const demoSite: SiteConfig = {
   _id: 'showcase-site',
-  name: 'DRK Showcase',
+  name: 'DRK Design System Showcase',
   hostname: 'showcase.local',
   defaultLocale: 'de',
   navigation: [
@@ -64,7 +64,7 @@ export default function ShowcaseClient() {
             </p>
           </section>
 
-          <Section title="Navigation" description="Hauptnavigation fuer Desktop und Mobile Menues.">
+          <Section title="Navigation" description="Hauptnavigation für Desktop und mobile Menüs.">
             <Navigation site={demoSite} />
           </Section>
 
@@ -81,7 +81,7 @@ export default function ShowcaseClient() {
 
           <Section
             title="Form: Label, Input, Textarea, Select, Checkbox, Radio"
-            description="Zugaengliche Form-Bausteine mit Fehler- und Hinweisdarstellung."
+            description="Zugängliche Form-Bausteine mit Fehler- und Hinweisdarstellung."
           >
             <div className={styles.formGrid}>
               <div>
@@ -102,7 +102,7 @@ export default function ShowcaseClient() {
                 <Label htmlFor="topic">Thema</Label>
                 <Select
                   id="topic"
-                  placeholder="Bitte waehlen"
+                  placeholder="Bitte wählen"
                   options={[
                     { value: 'hilfe', label: 'Hilfeleistung' },
                     { value: 'kurs', label: 'Kursangebot' },
@@ -117,6 +117,7 @@ export default function ShowcaseClient() {
               <div className={styles.fullWidth}>
                 <Radio
                   name="contact"
+                  groupLabel="Bevorzugte Kontaktmethode"
                   value={radioValue}
                   onChange={(event) => setRadioValue(event.target.value)}
                   options={[
@@ -137,23 +138,26 @@ export default function ShowcaseClient() {
                 Ihre Anfrage wurde erfolgreich gespeichert.
               </Alert>
               <Alert variant="error" title="Fehler">
-                Bitte pruefen Sie Ihre Eingaben.
+                Bitte prüfen Sie Ihre Eingaben.
               </Alert>
               <div className={styles.row}>
                 <Spinner size="sm" aria-label="Laden klein" />
                 <Spinner size="md" aria-label="Laden mittel" />
-                <Spinner size="lg" aria-label="Laden gross" />
+                <Spinner size="lg" aria-label="Laden groß" />
               </div>
             </div>
           </Section>
 
-          <Section title="Modal" description="Dialog fuer fokussierte Interaktionen mit Escape/Backdrop-Close.">
-            <Button onClick={() => setIsModalOpen(true)}>Modal oeffnen</Button>
+          <Section
+            title="Modal"
+            description="Dialog für fokussierte Interaktionen mit Escape/Backdrop-Close."
+          >
+            <Button onClick={() => setIsModalOpen(true)}>Modal öffnen</Button>
             <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)} title="Beispiel-Modal">
               <p>Dies ist ein Beispielinhalt im Modal.</p>
               <div className={styles.row}>
                 <Button variant="secondary" onClick={() => setIsModalOpen(false)}>
-                  Schliessen
+                  Schließen
                 </Button>
               </div>
             </Modal>
@@ -161,7 +165,7 @@ export default function ShowcaseClient() {
 
           <Section
             title="CookieBanner und CookieSettingsLink"
-            description="Consent-Banner mit Auswahlmoeglichkeiten und spaeterem Opt-in/Opt-out."
+            description="Consent-Banner mit Auswahlmöglichkeiten und späterem Opt-in/Opt-out."
           >
             <div className={styles.row}>
               <CookieSettingsLink />

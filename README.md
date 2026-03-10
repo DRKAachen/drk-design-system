@@ -7,7 +7,7 @@ Monorepo for DRK frontend packages with strict separation between UI, CMS adapte
 ### `@drkaachen/design-system-ui` (repo root)
 
 UI-only package with:
-- React components (Header, Footer, Navigation, Button, Modal, Alert, form controls, CookieBanner, Spinner)
+- React components (Header, Footer, Navigation, Button, Modal, Alert, form controls, CookieBanner, Spinner, DrkLogo)
 - SCSS tokens, mixins, globals (including dark mode and reduced-motion support)
 - Cookie consent helpers with DSGVO enforcement utilities
 - HTML sanitizer, scroll-lock utility, and CSP security headers helper
@@ -72,9 +72,26 @@ import {
   Alert,
   Input,
   Label,
+  DrkLogo,
   type SiteConfig,
 } from '@drkaachen/design-system-ui'
 ```
+
+### DRK Logo
+
+The `DrkLogo` component renders the official DRK circular emblem (red cross with "DEUTSCHES ROTES KREUZ" text around the perimeter). It is used automatically in the `Header` when no custom `logoUrl` is provided and can also be used standalone:
+
+```tsx
+<DrkLogo size={42} />
+```
+
+**Setup:** Copy `assets/drk-logo.png` from this package to your app's `public/` directory:
+
+```bash
+cp node_modules/@drkaachen/design-system-ui/assets/drk-logo.png public/drk-logo.png
+```
+
+The `src` prop defaults to `/drk-logo.png` but can be overridden if you place the file elsewhere.
 
 UI `SiteConfig` is CMS-agnostic and expects a plain `logoUrl` string:
 
@@ -200,7 +217,7 @@ The previous mixed package surface was removed by design.
 
 The design system follows WCAG 2.2 Level AA guidelines:
 
-- **Color contrast:** Heading and text colors use `$color-text-accent` (#c20004, ~5.2:1 ratio) instead of raw `$drk-rot` (#e60005, ~4.0:1) for WCAG AA compliance on small text. `$drk-rot` is reserved for large text (>=18pt), decorative elements, and background fills.
+- **Color contrast:** Headings use `$color-text-accent` which maps to `$drk-rot` (#e60005, ~4.0:1 ratio) — WCAG AA compliant for large text (>=18pt / >=14pt bold, requires 3:1). For small body text that needs red, use `$drk-rot-text` (#c20004, ~5.2:1 ratio) which meets WCAG AA for all text sizes.
 - **Reduced motion:** Global `prefers-reduced-motion: reduce` media query disables all transitions and animations. A `@mixin reduced-motion` is available for component-level use.
 - **Dark mode:** Basic `prefers-color-scheme: dark` support with dark tokens.
 - **Focus indicators:** Visible 2px red outline with white shadow ring on all interactive elements via `@mixin focus-outline`.

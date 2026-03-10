@@ -11,7 +11,7 @@
   align-items: flex-start;
   gap: $spacing-sm;
   padding: $spacing-md $spacing-lg;
-  border-radius: $radius-sm;
+  border-radius: $radius-md;
   border-left: 4px solid;
 
   &__body {
@@ -35,6 +35,7 @@
 
   &__dismiss {
     @include button-reset;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -46,10 +47,23 @@
     border-radius: $radius-sm;
     color: inherit;
     opacity: 0.7;
-    transition: opacity $transition-fast, background-color $transition-fast;
+    transition:
+      opacity $transition-fast,
+      background-color $transition-fast;
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
+    }
+
+    // Invisible extended hit area to meet WCAG 2.2 SC 2.5.8 (44×44px)
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      min-width: 44px;
+      min-height: 44px;
     }
 
     &:hover {
@@ -65,10 +79,10 @@
   &--success {
     background-color: rgba($color-success, 0.12);
     border-left-color: $color-success;
-    color: color.adjust($color-success, $lightness: -15%);
+    color: $color-success-text;
 
     .alert__title {
-      color: color.adjust($color-success, $lightness: -20%);
+      color: $color-success-text;
     }
   }
 
@@ -85,10 +99,10 @@
   &--warning {
     background-color: rgba($color-warning, 0.2);
     border-left-color: $color-warning;
-    color: color.adjust($color-warning, $lightness: -25%);
+    color: $color-warning-text;
 
     .alert__title {
-      color: color.adjust($color-warning, $lightness: -30%);
+      color: $color-warning-text;
     }
   }
 

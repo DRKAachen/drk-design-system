@@ -30,7 +30,7 @@
   border-radius: variables.$radius-sm;
   transition: top variables.$transition-fast;
 
-  &:focus {
+  &:focus-visible {
     top: variables.$spacing-md;
     outline: 2px solid variables.$drk-weiss;
     outline-offset: 2px;
