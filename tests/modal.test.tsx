@@ -227,8 +227,9 @@ describe('Modal', () => {
           <p>Content</p>
         </Modal>
       )
-      const doc = screen.getByRole('document')
-      expect(doc.className).toContain('custom-modal')
+      const dialog = screen.getByRole('dialog')
+      const container = dialog.firstElementChild as HTMLElement
+      expect(container.className).toContain('custom-modal')
     })
   })
 })
