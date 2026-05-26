@@ -220,13 +220,15 @@ h6 {
   font-size: var(--drk-text-lg);
 }
 
-.drk a {
+/* Exclude .drk-btn so anchor-buttons keep their component color/decoration —
+   `.drk a` (0-1-1) would otherwise outrank `.drk-btn-primary` (0-1-0). */
+.drk a:not(.drk-btn) {
   color: var(--drk-blue);
   text-decoration: none;
   transition: color var(--drk-transition-fast);
 }
 
-.drk a:hover {
+.drk a:not(.drk-btn):hover {
   color: var(--drk-blue-mid);
   text-decoration: underline;
 }
