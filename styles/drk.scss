@@ -131,61 +131,13 @@
 }
 
 /* -----------------------------------------------------------------------------
- * 2. Minimal reset
- * -------------------------------------------------------------------------- */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-* {
-  margin: 0;
-}
-
-html {
-  -webkit-text-size-adjust: 100%;
-  -moz-tab-size: 4;
-  tab-size: 4;
-}
-
-body {
-  min-height: 100vh;
-  line-height: var(--drk-leading-normal);
-  -webkit-font-smoothing: antialiased;
-}
-
-img,
-picture,
-video,
-canvas,
-svg {
-  display: block;
-  max-width: 100%;
-}
-
-input,
-button,
-textarea,
-select {
-  font: inherit;
-  color: inherit;
-}
-
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  overflow-wrap: break-word;
-}
-
-/* -----------------------------------------------------------------------------
- * 3. Base element styles (scoped under .drk so the bundle never fights a
- *    host page that only wants the components). Add class="drk" to <body>
- *    (or any wrapper) to opt the subtree into DRK base styling.
+ * 2. Reset + base — ALL scoped under `.drk`
+ *
+ * The entire reset and base styling live under `.drk`, so the bundle is
+ * completely inert until a wrapper opts in. This lets non-React/CMS pages
+ * link it and use just the `.drk-*` components without a global reset
+ * disturbing their existing styles. For a full DRK page, put class="drk"
+ * on <body>; for a scoped island, on any container.
  * -------------------------------------------------------------------------- */
 .drk {
   font-family: var(--drk-font-body);
@@ -193,49 +145,90 @@ h6 {
   line-height: var(--drk-leading-normal);
   color: var(--drk-text);
   background: var(--drk-bg);
-}
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  tab-size: 4;
 
-.drk h1,
-.drk h2,
-.drk h3,
-.drk h4,
-.drk h5,
-.drk h6 {
-  font-family: var(--drk-font-display);
-  font-weight: var(--drk-weight-bold);
-  line-height: var(--drk-leading-tight);
-  color: var(--drk-text);
-}
+  &,
+  & *,
+  & *::before,
+  & *::after {
+    box-sizing: border-box;
+  }
 
-.drk h1 {
-  font-size: var(--drk-text-3xl);
-}
-.drk h2 {
-  font-size: var(--drk-text-2xl);
-}
-.drk h3 {
-  font-size: var(--drk-text-xl);
-}
-.drk h4 {
-  font-size: var(--drk-text-lg);
-}
+  & * {
+    margin: 0;
+  }
 
-/* Exclude .drk-btn so anchor-buttons keep their component color/decoration —
-   `.drk a` (0-1-1) would otherwise outrank `.drk-btn-primary` (0-1-0). */
-.drk a:not(.drk-btn) {
-  color: var(--drk-blue);
-  text-decoration: none;
-  transition: color var(--drk-transition-fast);
-}
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
 
-.drk a:not(.drk-btn):hover {
-  color: var(--drk-blue-mid);
-  text-decoration: underline;
-}
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
 
-.drk :focus-visible {
-  outline: 2px solid var(--drk-blue);
-  outline-offset: 2px;
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    overflow-wrap: break-word;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--drk-font-display);
+    font-weight: var(--drk-weight-bold);
+    line-height: var(--drk-leading-tight);
+    color: var(--drk-text);
+  }
+
+  h1 {
+    font-size: var(--drk-text-3xl);
+  }
+  h2 {
+    font-size: var(--drk-text-2xl);
+  }
+  h3 {
+    font-size: var(--drk-text-xl);
+  }
+  h4 {
+    font-size: var(--drk-text-lg);
+  }
+
+  /* Exclude .drk-btn so anchor-buttons keep their component color/decoration —
+     a plain `.drk a` would otherwise outrank `.drk-btn-primary`. */
+  a:not(.drk-btn) {
+    color: var(--drk-blue);
+    text-decoration: none;
+    transition: color var(--drk-transition-fast);
+  }
+
+  a:not(.drk-btn):hover {
+    color: var(--drk-blue-mid);
+    text-decoration: underline;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--drk-blue);
+    outline-offset: 2px;
+  }
 }
 
 /* -----------------------------------------------------------------------------
@@ -449,7 +442,136 @@ h6 {
 }
 
 /* -----------------------------------------------------------------------------
- * 10. A few high-value utilities (kept minimal on purpose)
+ * 10. Header — sticky translucent navy bar (brand left, nav right)
+ * -------------------------------------------------------------------------- */
+.drk-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(0, 45, 85, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.drk-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--drk-space-4);
+  height: 3.75rem;
+  max-width: var(--drk-container-max);
+  margin-inline: auto;
+  padding-inline: var(--drk-container-pad);
+}
+
+.drk-header-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--drk-space-3);
+  color: #fff;
+  font-family: var(--drk-font-display);
+  font-size: var(--drk-text-base);
+  font-weight: var(--drk-weight-bold);
+  text-decoration: none;
+}
+
+.drk-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--drk-space-1);
+}
+
+.drk-nav-link {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--drk-space-2) var(--drk-space-3);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: var(--drk-text-sm);
+  font-weight: var(--drk-weight-medium);
+  text-decoration: none;
+  border-radius: var(--drk-radius-full);
+  transition:
+    color var(--drk-transition-fast),
+    background-color var(--drk-transition-fast);
+}
+.drk-nav-link:hover,
+.drk-nav-link[aria-current='page'] {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* -----------------------------------------------------------------------------
+ * 11. Footer — navy, centered column
+ * -------------------------------------------------------------------------- */
+.drk-footer {
+  background: var(--drk-blue);
+  color: #fff;
+  padding: var(--drk-space-12) 0 var(--drk-space-8);
+}
+
+.drk-footer-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--drk-space-4);
+  text-align: center;
+  max-width: var(--drk-container-max);
+  margin-inline: auto;
+  padding-inline: var(--drk-container-pad);
+}
+
+.drk-footer-org {
+  font-family: var(--drk-font-display);
+  font-size: var(--drk-text-lg);
+  font-weight: var(--drk-weight-bold);
+}
+
+.drk-footer-meta {
+  font-size: var(--drk-text-xs);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.drk-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--drk-space-6);
+  font-size: var(--drk-text-xs);
+}
+.drk-footer-links a {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+}
+.drk-footer-links a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* -----------------------------------------------------------------------------
+ * 12. Skip link (accessibility)
+ * -------------------------------------------------------------------------- */
+.drk-skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 200;
+  padding: var(--drk-space-3) var(--drk-space-5);
+  background: var(--drk-rot);
+  color: #fff;
+  font-size: var(--drk-text-sm);
+  font-weight: var(--drk-weight-semibold);
+  text-decoration: none;
+  border-radius: 0 0 var(--drk-radius-md) 0;
+}
+.drk-skip-link:focus {
+  left: 0;
+  outline: 3px solid #fff;
+  outline-offset: -3px;
+}
+
+/* -----------------------------------------------------------------------------
+ * 13. A few high-value utilities (kept minimal on purpose)
  * -------------------------------------------------------------------------- */
 .drk-text-muted {
   color: var(--drk-text-muted);
