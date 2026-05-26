@@ -48,30 +48,6 @@ jobs:
       - name: Audit production dependencies
         run: npm audit --omit=dev --audit-level=high
 
-      - name: Build CSS bundle
-        run: npm run build:css
-
-      - name: Publish CSS bundle to object storage
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          for variant in "drk.min.css:drk@${VERSION}.css" "drk.css:drk@${VERSION}.debug.css"; do
-            SRC="dist/${variant%%:*}"
-            KEY="drk/${variant##*:}"
-            echo "Uploading $SRC -> s3://$S3_BUCKET/$KEY"
-            aws s3 cp "$SRC" "s3://$S3_BUCKET/$KEY" \
-              --endpoint-url "$S3_ENDPOINT" \
-              --region "$S3_REGION" \
-              --content-type "text/css; charset=utf-8" \
-              --cache-control "public, max-age=31536000, immutable"
-          done
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
-          AWS_EC2_METADATA_DISABLED: 'true'
-          S3_ENDPOINT: ${{ vars.S3_ENDPOINT }}
-          S3_BUCKET: ${{ vars.S3_BUCKET }}
-          S3_REGION: ${{ vars.S3_REGION }}
-
       - name: Publish UI package
         run: |
           OUTPUT=$(npm publish --provenance 2>&1) && echo "$OUTPUT" || {
