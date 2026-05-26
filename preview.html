@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DRK CSS Bundle — Preview</title>
+    <!-- Built artifact. Run `npm run build:css` first. -->
+    <link rel="stylesheet" href="./dist/drk.css" />
+    <style>
+      /* page-local layout only — everything else comes from the bundle */
+      body { padding: 0 0 var(--drk-space-24); }
+      .bar {
+        background: var(--drk-blue);
+        color: #fff;
+        padding: var(--drk-space-4) 0;
+        margin-bottom: var(--drk-space-12);
+      }
+      .bar .drk-container { display: flex; align-items: center; justify-content: space-between; }
+      .row { display: flex; flex-wrap: wrap; gap: var(--drk-space-4); align-items: center; }
+      .grid { display: grid; gap: var(--drk-space-6); grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+      section { margin-bottom: var(--drk-space-12); }
+      .swatch { height: 4rem; border-radius: var(--drk-radius-md); border: 1px solid var(--drk-border); }
+    </style>
+  </head>
+  <body class="drk">
+    <div class="bar">
+      <div class="drk-container">
+        <strong>DRK Spenden</strong>
+        <div class="row">
+          <a class="drk-btn drk-btn-ghost" style="color:#fff" href="#">Mehr erfahren</a>
+          <a class="drk-btn drk-btn-primary" href="#">Jetzt spenden</a>
+        </div>
+      </div>
+    </div>
+
+    <main class="drk-container">
+      <section>
+        <h1>Digitale Werkzeuge für das Rote Kreuz</h1>
+        <p class="drk-text-muted" style="max-width: 50ch; margin-top: var(--drk-space-4)">
+          Eine schlanke, framework-freie Stilbibliothek — Tokens, Komponenten und Layout
+          in einer einzigen CSS-Datei. Genau wie drk-digital.io.
+        </p>
+        <div class="row" style="margin-top: var(--drk-space-6)">
+          <button class="drk-btn drk-btn-primary">Primary</button>
+          <button class="drk-btn drk-btn-secondary">Secondary</button>
+          <button class="drk-btn drk-btn-outline">Outline</button>
+          <button class="drk-btn drk-btn-ghost">Ghost</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Karten</h2>
+        <div class="grid" style="margin-top: var(--drk-space-6)">
+          <div class="drk-card drk-card-sm">
+            <span class="drk-badge drk-badge-primary">Live</span>
+            <h3 style="margin-top: var(--drk-space-3)">Spendenformular</h3>
+            <p class="drk-text-muted" style="margin-top: var(--drk-space-2)">
+              Einmalig oder als Fördermitglied — mit IBAN, PayPal oder Lastschrift.
+            </p>
+            <a href="#" style="display:inline-block; margin-top: var(--drk-space-4)">Tool öffnen →</a>
+          </div>
+          <div class="drk-card drk-card-sm">
+            <span class="drk-badge drk-badge-info">Info</span>
+            <h3 style="margin-top: var(--drk-space-3)">Kampagnen</h3>
+            <p class="drk-text-muted" style="margin-top: var(--drk-space-2)">
+              Aktuelle Spendenaktionen mit Zielbetrag und Fortschritt.
+            </p>
+          </div>
+          <div class="drk-card drk-card-sm">
+            <span class="drk-badge drk-badge-success">Neu</span>
+            <h3 style="margin-top: var(--drk-space-3)">Testamentspende</h3>
+            <p class="drk-text-muted" style="margin-top: var(--drk-space-2)">
+              Beratung und Kontaktformular für die Förderung über das Leben hinaus.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Hinweise</h2>
+        <div class="drk-stack" style="margin-top: var(--drk-space-6)">
+          <div class="drk-info-box drk-info-box-info">Ihre Spende ist steuerlich absetzbar.</div>
+          <div class="drk-info-box drk-info-box-success">Vielen Dank! Ihre Anfrage wurde gesendet.</div>
+          <div class="drk-info-box drk-info-box-warning">Bitte prüfen Sie den Verwendungszweck.</div>
+          <div class="drk-info-box drk-info-box-danger">Ein Fehler ist aufgetreten.</div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Formular</h2>
+        <div class="drk-card" style="margin-top: var(--drk-space-6); max-width: 32rem">
+          <div class="drk-stack">
+            <div>
+              <label class="drk-label" for="n">Name</label>
+              <input class="drk-input" id="n" placeholder="Vor- und Nachname" />
+            </div>
+            <div>
+              <label class="drk-label" for="m">Nachricht</label>
+              <textarea class="drk-textarea" id="m" placeholder="Ihre Nachricht …"></textarea>
+            </div>
+            <button class="drk-btn drk-btn-primary">Anfrage senden</button>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Farben</h2>
+        <div class="grid" style="margin-top: var(--drk-space-6)">
+          <div><div class="swatch" style="background: var(--drk-rot)"></div><small>--drk-rot</small></div>
+          <div><div class="swatch" style="background: var(--drk-blue)"></div><small>--drk-blue</small></div>
+          <div><div class="swatch" style="background: var(--drk-bg)"></div><small>--drk-bg</small></div>
+          <div><div class="swatch" style="background: var(--drk-surface-muted)"></div><small>--drk-surface-muted</small></div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
