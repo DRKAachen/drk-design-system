@@ -125,9 +125,10 @@
   --drk-transition-base: 250ms var(--drk-ease-out);
   --drk-transition-slow: 400ms var(--drk-ease-out);
 
-  /* Layout */
-  --drk-container-max: 72rem;
-  --drk-container-pad: var(--drk-space-6);
+  /* Layout — matches the donation site's content container (1200px / 1rem)
+     so the header/footer align flush with page content. */
+  --drk-container-max: 75rem;
+  --drk-container-pad: var(--drk-space-4);
 }
 
 /* -----------------------------------------------------------------------------
