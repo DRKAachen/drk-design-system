@@ -46,7 +46,9 @@ jobs:
         run: npm run test
 
       - name: Audit production dependencies
-        run: npm audit --omit=dev --audit-level=high
+        # Exclude peerDependencies: this library doesn't ship Next.js/React —
+        # the consuming app supplies them, so their advisories aren't ours to gate.
+        run: npm audit --omit=dev --omit=peer --audit-level=high
 
       - name: Publish UI package
         run: |

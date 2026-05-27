@@ -1,0 +1,86 @@
+# Publish the framework-free CSS bundle (dist/drk.css) to object storage.
+#
+# Deliberately separate from publish.yml: a static stylesheet doesn't need
+# the npm package's lint/type/test/audit gates, so it can ship independently
+# of unrelated dependency advisories.
+#
+# Versioned from package.json, uploaded as an immutable object:
+#   drk/drk@<version>.css        (minified — link this)
+#   drk/drk@<version>.debug.css  (expanded)
+#
+# Requires repo config:
+#   secrets:   S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY
+#   variables: S3_ENDPOINT, S3_BUCKET, S3_REGION
+name: Publish CSS bundle
+
+on:
+  # Auto-publish whenever the bundle source or version changes on these
+  # branches — no manual `npm run upload:css` needed. Path-filtered so
+  # unrelated commits don't trigger an upload.
+  push:
+    branches:
+      - main
+      - feat/css-bundle
+    paths:
+      - 'styles/drk.scss'
+      - 'package.json'
+      - '.github/workflows/publish-css.yml'
+  workflow_dispatch:
+  release:
+    types:
+      - published
+
+permissions:
+  contents: read
+
+jobs:
+  publish-css:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build CSS bundle
+        run: npm run build:css
+
+      - name: Upload to object storage
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          # Immutable versioned files.
+          for variant in "drk.min.css:drk@${VERSION}.css" "drk.css:drk@${VERSION}.debug.css"; do
+            SRC="dist/${variant%%:*}"
+            KEY="drk/${variant##*:}"
+            echo "Uploading $SRC -> s3://$S3_BUCKET/$KEY"
+            aws s3 cp "$SRC" "s3://$S3_BUCKET/$KEY" \
+              --endpoint-url "$S3_ENDPOINT" \
+              --region "$S3_REGION" \
+              --content-type "text/css; charset=utf-8" \
+              --cache-control "public, max-age=31536000, immutable"
+          done
+          # Mutable "latest" pointer (short cache) for consumers that don't pin.
+          echo "Uploading dist/drk.min.css -> s3://$S3_BUCKET/drk/latest.css"
+          aws s3 cp dist/drk.min.css "s3://$S3_BUCKET/drk/latest.css" \
+            --endpoint-url "$S3_ENDPOINT" \
+            --region "$S3_REGION" \
+            --content-type "text/css; charset=utf-8" \
+            --cache-control "public, max-age=60"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
+          AWS_EC2_METADATA_DISABLED: 'true'
+          # Hetzner's Ceph/RadosGW chokes on the aws-cli v2.23+ default CRC
+          # checksums (NoneType / InvalidArgument). Only add them when required.
+          AWS_REQUEST_CHECKSUM_CALCULATION: when_required
+          AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
+          S3_ENDPOINT: ${{ vars.S3_ENDPOINT }}
+          S3_BUCKET: ${{ vars.S3_BUCKET }}
+          S3_REGION: ${{ vars.S3_REGION }}

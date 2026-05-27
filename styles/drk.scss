@@ -1,0 +1,727 @@
+/* =============================================================================
+ * DRK CSS Bundle — drk.css
+ * -----------------------------------------------------------------------------
+ * A framework-free, link-and-go stylesheet (the "Bootstrap model"): design
+ * tokens as CSS custom properties + a minimal reset + namespaced `.drk-*`
+ * component classes.
+ *
+ * Visual language mirrors https://drk-digital.io — warm "stone" neutrals,
+ * DRK red + navy, Helvetica Neue system font, fluid type, pill buttons,
+ * generous rounding, soft shadows.
+ *
+ * Consume from anywhere (React or plain HTML):
+ *   <link rel="stylesheet" href="https://<cdn>/drk/drk@x.y.z.css">
+ *
+ * App-local CSS should read the tokens (var(--drk-rot), var(--space-4), …)
+ * rather than hardcoding values, so a token change here propagates everywhere.
+ *
+ * Built via `npm run build:css` → dist/drk.css + dist/drk.min.css.
+ * ========================================================================== */
+
+/* -----------------------------------------------------------------------------
+ * 1. Design tokens
+ * -------------------------------------------------------------------------- */
+:root {
+  /* Brand — red */
+  --drk-rot: #e60005;
+  --drk-rot-light: #ff3344;
+  --drk-rot-dark: #a51e0f;
+  --drk-rot-glow: rgba(230, 0, 5, 0.15);
+  --drk-rot-glow-strong: rgba(230, 0, 5, 0.25);
+
+  /* Brand — navy */
+  --drk-blue: #002d55;
+  --drk-blue-mid: #2276d0;
+  --drk-blue-steel: #698caf;
+  --drk-blue-light: #ebf5ff;
+  --drk-blue-glow: rgba(0, 45, 85, 0.15);
+  --drk-blue-glow-strong: rgba(0, 45, 85, 0.25);
+
+  /* Backgrounds & surfaces (warm stone) */
+  --drk-bg: #f7f5f2;
+  --drk-bg-warm: #f3efe9;
+  --drk-surface: #ffffff;
+  --drk-surface-hover: #fefefe;
+  --drk-surface-muted: #f0ece6;
+
+  /* Text */
+  --drk-text: #1c1917;
+  --drk-text-secondary: #57534e;
+  --drk-text-muted: #78716c;
+  --drk-text-faint: #a8a29e;
+  --drk-text-on-brand: #ffffff;
+
+  /* Borders */
+  --drk-border: #e7e5e4;
+  --drk-border-light: #f5f5f4;
+  --drk-border-hover: #d6d3d1;
+
+  /* Semantic state colors */
+  --drk-success: #16a34a;
+  --drk-success-bg: #f0fdf4;
+  --drk-success-border: #bbf7d0;
+  --drk-info: #2276d0;
+  --drk-info-bg: #ebf5ff;
+  --drk-warning: #d97706;
+  --drk-warning-bg: #fffbeb;
+  --drk-warning-border: #fde68a;
+  --drk-danger: var(--drk-rot);
+
+  /* Typography — Helvetica Neue system stack (no web fonts to load) */
+  --drk-font-body: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --drk-font-display: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --drk-font-mono: 'SF Mono', 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+
+  /* Fluid type scale */
+  --drk-text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.8125rem);
+  --drk-text-sm: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem);
+  --drk-text-base: clamp(0.9375rem, 0.9rem + 0.2vw, 1rem);
+  --drk-text-lg: clamp(1.125rem, 1rem + 0.5vw, 1.25rem);
+  --drk-text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2rem);
+  --drk-text-2xl: clamp(2rem, 1.4rem + 2.5vw, 3rem);
+  --drk-text-3xl: clamp(2.5rem, 1.5rem + 4vw, 4rem);
+
+  --drk-weight-normal: 400;
+  --drk-weight-medium: 500;
+  --drk-weight-semibold: 600;
+  --drk-weight-bold: 700;
+
+  --drk-leading-tight: 1.2;
+  --drk-leading-normal: 1.5;
+  --drk-leading-relaxed: 1.7;
+
+  /* Spacing scale */
+  --drk-space-1: 0.25rem;
+  --drk-space-2: 0.5rem;
+  --drk-space-3: 0.75rem;
+  --drk-space-4: 1rem;
+  --drk-space-5: 1.25rem;
+  --drk-space-6: 1.5rem;
+  --drk-space-8: 2rem;
+  --drk-space-10: 2.5rem;
+  --drk-space-12: 3rem;
+  --drk-space-16: 4rem;
+  --drk-space-20: 5rem;
+  --drk-space-24: 6rem;
+
+  /* Radii */
+  --drk-radius-sm: 0.5rem;
+  --drk-radius-md: 0.75rem;
+  --drk-radius-lg: 1rem;
+  --drk-radius-xl: 1.25rem;
+  --drk-radius-2xl: 1.5rem;
+  --drk-radius-full: 9999px;
+
+  /* Shadows */
+  --drk-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
+  --drk-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.03);
+  --drk-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
+  --drk-shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.1), 0 8px 20px rgba(0, 0, 0, 0.05);
+  --drk-shadow-glow: 0 0 0 1px var(--drk-rot-glow), 0 4px 20px var(--drk-rot-glow);
+
+  /* Motion */
+  --drk-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --drk-transition-fast: 150ms var(--drk-ease-out);
+  --drk-transition-base: 250ms var(--drk-ease-out);
+  --drk-transition-slow: 400ms var(--drk-ease-out);
+
+  /* Layout — matches the donation site's content container (1200px / 1rem)
+     so the header/footer align flush with page content. */
+  --drk-container-max: 75rem;
+  --drk-container-pad: var(--drk-space-4);
+}
+
+/* -----------------------------------------------------------------------------
+ * 2. Reset + base — ALL scoped under `.drk`
+ *
+ * The entire reset and base styling live under `.drk`, so the bundle is
+ * completely inert until a wrapper opts in. This lets non-React/CMS pages
+ * link it and use just the `.drk-*` components without a global reset
+ * disturbing their existing styles. For a full DRK page, put class="drk"
+ * on <body>; for a scoped island, on any container.
+ * -------------------------------------------------------------------------- */
+.drk {
+  font-family: var(--drk-font-body);
+  font-size: var(--drk-text-base);
+  line-height: var(--drk-leading-normal);
+  color: var(--drk-text);
+  background: var(--drk-bg);
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  tab-size: 4;
+
+  &,
+  & *,
+  & *::before,
+  & *::after {
+    box-sizing: border-box;
+  }
+
+  & * {
+    margin: 0;
+  }
+
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    overflow-wrap: break-word;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--drk-font-display);
+    font-weight: var(--drk-weight-bold);
+    line-height: var(--drk-leading-tight);
+    color: var(--drk-text);
+  }
+
+  h1 {
+    font-size: var(--drk-text-3xl);
+  }
+  h2 {
+    font-size: var(--drk-text-2xl);
+  }
+  h3 {
+    font-size: var(--drk-text-xl);
+  }
+  h4 {
+    font-size: var(--drk-text-lg);
+  }
+
+  /* Exclude .drk-btn so anchor-buttons keep their component color/decoration —
+     a plain `.drk a` would otherwise outrank `.drk-btn-primary`. */
+  a:not(.drk-btn) {
+    color: var(--drk-blue);
+    text-decoration: none;
+    transition: color var(--drk-transition-fast);
+  }
+
+  a:not(.drk-btn):hover {
+    color: var(--drk-blue-mid);
+    text-decoration: underline;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--drk-blue);
+    outline-offset: 2px;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+ * 4. Layout
+ * -------------------------------------------------------------------------- */
+.drk-container {
+  width: 100%;
+  max-width: var(--drk-container-max);
+  margin-inline: auto;
+  padding-inline: var(--drk-container-pad);
+}
+
+/* -----------------------------------------------------------------------------
+ * 5. Buttons
+ * -------------------------------------------------------------------------- */
+.drk-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--drk-space-2);
+  min-height: 2.75rem;
+  padding: var(--drk-space-3) var(--drk-space-6);
+  font-family: inherit;
+  font-size: var(--drk-text-sm);
+  font-weight: var(--drk-weight-semibold);
+  line-height: 1;
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: var(--drk-radius-full);
+  cursor: pointer;
+  transition:
+    transform var(--drk-transition-fast),
+    box-shadow var(--drk-transition-fast),
+    background-color var(--drk-transition-fast),
+    color var(--drk-transition-fast);
+}
+
+.drk-btn:hover {
+  transform: translateY(-1px);
+}
+
+.drk-btn:active {
+  transform: translateY(0);
+}
+
+.drk-btn:disabled,
+.drk-btn[aria-disabled='true'] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.drk-btn-primary {
+  background: var(--drk-rot);
+  color: var(--drk-text-on-brand);
+  box-shadow: 0 2px 12px var(--drk-rot-glow);
+}
+.drk-btn-primary:hover {
+  background: var(--drk-rot-dark);
+  box-shadow: 0 4px 18px var(--drk-rot-glow-strong);
+}
+
+.drk-btn-secondary {
+  background: var(--drk-blue);
+  color: var(--drk-text-on-brand);
+  box-shadow: 0 2px 12px var(--drk-blue-glow);
+}
+.drk-btn-secondary:hover {
+  box-shadow: 0 4px 18px var(--drk-blue-glow-strong);
+}
+
+.drk-btn-outline {
+  background: transparent;
+  color: var(--drk-text);
+  border-color: var(--drk-border-hover);
+}
+.drk-btn-outline:hover {
+  background: var(--drk-surface-muted);
+}
+
+.drk-btn-ghost {
+  background: transparent;
+  color: var(--drk-text);
+}
+.drk-btn-ghost:hover {
+  background: var(--drk-surface-muted);
+}
+
+/* -----------------------------------------------------------------------------
+ * 6. Cards
+ * -------------------------------------------------------------------------- */
+.drk-card {
+  background: var(--drk-surface);
+  border: 1px solid var(--drk-border);
+  border-radius: var(--drk-radius-2xl);
+  box-shadow: var(--drk-shadow-lg);
+  padding: clamp(1.5rem, 3vw, 3rem);
+}
+
+.drk-card-sm {
+  padding: var(--drk-space-6);
+  border-radius: var(--drk-radius-xl);
+  box-shadow: var(--drk-shadow-md);
+}
+
+/* -----------------------------------------------------------------------------
+ * 7. Badges / tags
+ * -------------------------------------------------------------------------- */
+.drk-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--drk-space-1);
+  padding: 0.15rem 0.6rem;
+  font-size: var(--drk-text-xs);
+  font-weight: var(--drk-weight-semibold);
+  border-radius: var(--drk-radius-full);
+  background: var(--drk-surface-muted);
+  color: var(--drk-text-secondary);
+}
+.drk-badge-primary {
+  background: var(--drk-rot);
+  color: var(--drk-text-on-brand);
+}
+.drk-badge-secondary {
+  background: var(--drk-blue);
+  color: var(--drk-text-on-brand);
+}
+.drk-badge-success {
+  background: var(--drk-success-bg);
+  color: var(--drk-success);
+}
+.drk-badge-info {
+  background: var(--drk-info-bg);
+  color: var(--drk-info);
+}
+.drk-badge-warning {
+  background: var(--drk-warning-bg);
+  color: var(--drk-warning);
+}
+
+/* -----------------------------------------------------------------------------
+ * 8. Info boxes / alerts
+ * -------------------------------------------------------------------------- */
+.drk-info-box {
+  display: flex;
+  gap: var(--drk-space-3);
+  padding: var(--drk-space-4) var(--drk-space-5);
+  border: 1px solid var(--drk-border);
+  border-left-width: 4px;
+  border-radius: var(--drk-radius-md);
+  background: var(--drk-surface);
+  color: var(--drk-text-secondary);
+  font-size: var(--drk-text-sm);
+}
+.drk-info-box-info {
+  background: var(--drk-info-bg);
+  border-left-color: var(--drk-info);
+}
+.drk-info-box-success {
+  background: var(--drk-success-bg);
+  border-left-color: var(--drk-success);
+}
+.drk-info-box-warning {
+  background: var(--drk-warning-bg);
+  border-left-color: var(--drk-warning);
+}
+.drk-info-box-danger {
+  background: #fef2f2;
+  border-left-color: var(--drk-rot);
+}
+
+/* -----------------------------------------------------------------------------
+ * 9. Form controls
+ * -------------------------------------------------------------------------- */
+.drk-input,
+.drk-textarea,
+.drk-select {
+  width: 100%;
+  padding: var(--drk-space-3) var(--drk-space-4);
+  font-size: var(--drk-text-base);
+  font-family: inherit;
+  color: var(--drk-text);
+  background: var(--drk-surface);
+  border: 1px solid var(--drk-border);
+  border-radius: var(--drk-radius-md);
+  transition:
+    border-color var(--drk-transition-fast),
+    box-shadow var(--drk-transition-fast);
+}
+
+.drk-input:focus,
+.drk-textarea:focus,
+.drk-select:focus {
+  outline: none;
+  border-color: var(--drk-blue);
+  box-shadow: 0 0 0 3px var(--drk-blue-glow);
+}
+
+.drk-textarea {
+  min-height: 8rem;
+  resize: vertical;
+  line-height: var(--drk-leading-normal);
+}
+
+.drk-label {
+  display: block;
+  margin-bottom: var(--drk-space-2);
+  font-size: var(--drk-text-sm);
+  font-weight: var(--drk-weight-medium);
+  color: var(--drk-text);
+}
+
+/* -----------------------------------------------------------------------------
+ * 10. Header — sticky translucent navy bar (brand left, nav right)
+ * -------------------------------------------------------------------------- */
+.drk-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(0, 45, 85, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.drk-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--drk-space-4);
+  height: 3.75rem;
+  max-width: var(--drk-container-max);
+  margin-inline: auto;
+  padding-inline: var(--drk-container-pad);
+}
+
+.drk-header-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--drk-space-3);
+  color: #fff;
+  font-family: var(--drk-font-display);
+  font-size: var(--drk-text-base);
+  font-weight: var(--drk-weight-bold);
+  text-decoration: none;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.drk-header-logo {
+  display: block;
+  height: 2.25rem;
+  width: auto;
+}
+
+.drk-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--drk-space-1);
+}
+
+/* Dropdown (disclosure) — toggle button + popover menu. Toggle reuses
+   .drk-nav-link styling on the header; menu is a light surface popover. */
+.drk-dropdown {
+  position: relative;
+  display: inline-flex;
+}
+
+.drk-dropdown-toggle {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  gap: var(--drk-space-1);
+}
+.drk-dropdown-toggle[data-active='true'] {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.drk-dropdown-caret {
+  font-size: 0.7em;
+  transition: transform var(--drk-transition-fast);
+}
+.drk-dropdown-toggle[aria-expanded='true'] .drk-dropdown-caret {
+  transform: rotate(180deg);
+}
+
+.drk-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  z-index: 110;
+  min-width: 15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--drk-space-2);
+  background: var(--drk-surface);
+  border: 1px solid var(--drk-border);
+  border-radius: var(--drk-radius-lg);
+  box-shadow: var(--drk-shadow-lg);
+}
+
+.drk-dropdown-item {
+  display: block;
+  padding: var(--drk-space-2) var(--drk-space-3);
+  color: var(--drk-text);
+  font-size: var(--drk-text-sm);
+  text-decoration: none;
+  border-radius: var(--drk-radius-md);
+}
+.drk-dropdown-item:hover,
+.drk-dropdown-item[aria-current='page'] {
+  background: var(--drk-surface-muted);
+}
+
+.drk-nav-link {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--drk-space-2) var(--drk-space-3);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: var(--drk-text-sm);
+  font-weight: var(--drk-weight-medium);
+  text-decoration: none;
+  border-radius: var(--drk-radius-full);
+  transition:
+    color var(--drk-transition-fast),
+    background-color var(--drk-transition-fast);
+}
+.drk-nav-link:hover,
+.drk-nav-link[aria-current='page'] {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Hamburger toggle — hidden on desktop, shown < 48em. */
+.drk-nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  color: #fff;
+  cursor: pointer;
+  border-radius: var(--drk-radius-md);
+}
+.drk-nav-toggle:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+.drk-nav-toggle svg {
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+/* Mobile slide-down menu — stacked links + full-width CTA. */
+.drk-mobile-menu {
+  display: none;
+}
+.drk-mobile-menu-link {
+  display: block;
+  padding: var(--drk-space-3) 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: var(--drk-text-base);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.drk-mobile-menu-link[aria-current='page'] {
+  color: #fff;
+  font-weight: var(--drk-weight-semibold);
+}
+.drk-mobile-menu-heading {
+  margin-top: var(--drk-space-3);
+  font-size: var(--drk-text-xs);
+  font-weight: var(--drk-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* -- responsive header --------------------------------------------------- */
+@media (max-width: 47.99em) {
+  .drk-nav {
+    display: none;
+  }
+  .drk-nav-toggle {
+    display: inline-flex;
+  }
+  .drk-mobile-menu[data-open='true'] {
+    display: flex;
+    flex-direction: column;
+    padding: var(--drk-space-2) var(--drk-container-pad) var(--drk-space-5);
+    background: rgba(0, 45, 85, 0.98);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .drk-mobile-menu[data-open='true'] .drk-btn {
+    width: 100%;
+    margin-top: var(--drk-space-4);
+  }
+}
+
+/* -----------------------------------------------------------------------------
+ * 11. Footer — navy, centered column
+ * -------------------------------------------------------------------------- */
+.drk-footer {
+  background: var(--drk-blue);
+  color: #fff;
+  padding: var(--drk-space-12) 0 var(--drk-space-8);
+}
+
+.drk-footer-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--drk-space-4);
+  text-align: center;
+  max-width: var(--drk-container-max);
+  margin-inline: auto;
+  padding-inline: var(--drk-container-pad);
+}
+
+.drk-footer-org {
+  font-family: var(--drk-font-display);
+  font-size: var(--drk-text-lg);
+  font-weight: var(--drk-weight-bold);
+}
+
+.drk-footer-meta {
+  font-size: var(--drk-text-xs);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.drk-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--drk-space-6);
+  font-size: var(--drk-text-xs);
+}
+.drk-footer-links a {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+}
+.drk-footer-links a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* -----------------------------------------------------------------------------
+ * 12. Skip link (accessibility)
+ * -------------------------------------------------------------------------- */
+.drk-skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 200;
+  padding: var(--drk-space-3) var(--drk-space-5);
+  background: var(--drk-rot);
+  color: #fff;
+  font-size: var(--drk-text-sm);
+  font-weight: var(--drk-weight-semibold);
+  text-decoration: none;
+  border-radius: 0 0 var(--drk-radius-md) 0;
+}
+.drk-skip-link:focus {
+  left: 0;
+  outline: 3px solid #fff;
+  outline-offset: -3px;
+}
+
+/* -----------------------------------------------------------------------------
+ * 13. A few high-value utilities (kept minimal on purpose)
+ * -------------------------------------------------------------------------- */
+.drk-text-muted {
+  color: var(--drk-text-muted);
+}
+.drk-text-center {
+  text-align: center;
+}
+.drk-stack > * + * {
+  margin-top: var(--drk-space-4);
+}
+.drk-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
