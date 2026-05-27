@@ -476,10 +476,71 @@
   text-decoration: none;
 }
 
+.drk-header-logo {
+  display: block;
+  height: 2.25rem;
+  width: auto;
+}
+
 .drk-nav {
   display: flex;
   align-items: center;
   gap: var(--drk-space-1);
+}
+
+/* Dropdown (disclosure) — toggle button + popover menu. Toggle reuses
+   .drk-nav-link styling on the header; menu is a light surface popover. */
+.drk-dropdown {
+  position: relative;
+  display: inline-flex;
+}
+
+.drk-dropdown-toggle {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  gap: var(--drk-space-1);
+}
+.drk-dropdown-toggle[data-active='true'] {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.drk-dropdown-caret {
+  font-size: 0.7em;
+  transition: transform var(--drk-transition-fast);
+}
+.drk-dropdown-toggle[aria-expanded='true'] .drk-dropdown-caret {
+  transform: rotate(180deg);
+}
+
+.drk-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  z-index: 110;
+  min-width: 15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--drk-space-2);
+  background: var(--drk-surface);
+  border: 1px solid var(--drk-border);
+  border-radius: var(--drk-radius-lg);
+  box-shadow: var(--drk-shadow-lg);
+}
+
+.drk-dropdown-item {
+  display: block;
+  padding: var(--drk-space-2) var(--drk-space-3);
+  color: var(--drk-text);
+  font-size: var(--drk-text-sm);
+  text-decoration: none;
+  border-radius: var(--drk-radius-md);
+}
+.drk-dropdown-item:hover,
+.drk-dropdown-item[aria-current='page'] {
+  background: var(--drk-surface-muted);
 }
 
 .drk-nav-link {
