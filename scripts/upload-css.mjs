@@ -51,12 +51,19 @@ const client = new S3Client({
   responseChecksumValidation: 'WHEN_REQUIRED',
 })
 
+// Versioned files are immutable (cache forever); `latest.css` is a mutable
+// pointer with a short cache so consumers that don't pin a version pick up
+// new releases quickly.
+const IMMUTABLE = 'public, max-age=31536000, immutable'
+const MUTABLE = 'public, max-age=60'
+
 const uploads = [
-  ['dist/drk.min.css', `drk/drk@${version}.css`],
-  ['dist/drk.css', `drk/drk@${version}.debug.css`],
+  ['dist/drk.min.css', `drk/drk@${version}.css`, IMMUTABLE],
+  ['dist/drk.css', `drk/drk@${version}.debug.css`, IMMUTABLE],
+  ['dist/drk.min.css', `drk/latest.css`, MUTABLE],
 ]
 
-for (const [file, key] of uploads) {
+for (const [file, key, cacheControl] of uploads) {
   let body
   try {
     body = readFileSync(join(root, file))
@@ -70,7 +77,7 @@ for (const [file, key] of uploads) {
       Key: key,
       Body: body,
       ContentType: 'text/css; charset=utf-8',
-      CacheControl: 'public, max-age=31536000, immutable',
+      CacheControl: cacheControl,
     }),
   )
   console.log(`Uploaded ${file} -> s3://${bucket}/${key}`)
