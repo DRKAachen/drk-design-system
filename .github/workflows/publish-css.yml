@@ -14,6 +14,17 @@
 name: Publish CSS bundle
 
 on:
+  # Auto-publish whenever the bundle source or version changes on these
+  # branches — no manual `npm run upload:css` needed. Path-filtered so
+  # unrelated commits don't trigger an upload.
+  push:
+    branches:
+      - main
+      - feat/css-bundle
+    paths:
+      - 'styles/drk.scss'
+      - 'package.json'
+      - '.github/workflows/publish-css.yml'
   workflow_dispatch:
   release:
     types:
